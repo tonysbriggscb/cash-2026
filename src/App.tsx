@@ -13,6 +13,7 @@ import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
 import store from "./store/store";
 import { useAppSelector } from "./store/hooks";
+import Todolist from "./components/Todolist";
 
 export const WrappedApp = () => {
   const count = useAppSelector((state) => state.slice.theme);
@@ -22,6 +23,7 @@ export const WrappedApp = () => {
         <Sidebar />
         <VStack overflow="clip" width={"100%"}>
           <Navbar />
+          <Todolist />
         </VStack>
       </HStack>
     </ThemeProvider>
