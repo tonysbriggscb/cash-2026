@@ -1,10 +1,10 @@
-import { createRoot } from 'react-dom/client'
-import { App } from './App'
+import { createRoot } from 'react-dom/client';
+import { App } from './App';
 
-const node = document.createElement('div') as Element
+const node = document.createElement('div') as Element;
 
-document.body.appendChild(node)
+document.body.appendChild(node);
 
-const root = createRoot(node)
+const root = createRoot(node);
 
-root.render(<App />)
+root.render(<App />);

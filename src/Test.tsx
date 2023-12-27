@@ -1,9 +1,5 @@
-import { Button } from '@cbhq/cds-web/buttons'
+import { Button } from '@cbhq/cds-web/buttons';
 
 export const Test = () => {
-  return (
-    <Button>
-      Hello world
-    </Button>
-  )
-}
+  return <Button>Hello world</Button>;
+};

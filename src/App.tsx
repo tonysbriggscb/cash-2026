@@ -1,10 +1,13 @@
-import { PortalProvider } from '@cbhq/cds-web/overlays/PortalProvider'
-import { DevicePreferencesProvider, FeatureFlagProvider } from '@cbhq/cds-web/system'
-import { ThemeProvider } from '@cbhq/cds-web/system/ThemeProvider'
+import { PortalProvider } from '@cbhq/cds-web/overlays/PortalProvider';
+import {
+  DevicePreferencesProvider,
+  FeatureFlagProvider,
+} from '@cbhq/cds-web/system';
+import { ThemeProvider } from '@cbhq/cds-web/system/ThemeProvider';
 
-import '@cbhq/cds-web/globalStyles'
+import '@cbhq/cds-web/globalStyles';
 
-import { Test } from './Test'
+import { Test } from './Test';
 
 export const App = () => (
   <FeatureFlagProvider frontier>
@@ -16,4 +19,4 @@ export const App = () => (
       </ThemeProvider>
     </DevicePreferencesProvider>
   </FeatureFlagProvider>
-)
+);

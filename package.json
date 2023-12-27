@@ -1,9 +1,11 @@
 {
-  "name": "cds-test",
+  "name": "cds-playground",
   "scripts": {
     "dev": "webpack serve --mode=development",
     "build": "webpack --mode=production",
-    "start": "webpack serve --mode=production"
+    "start": "webpack serve --mode=production",
+    "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet --fix",
+    "format": "prettier --write 'src/**/*.{js,ts,tsx}'"
   },
   "engines": {
     "node": "^18.19"
@@ -23,13 +25,21 @@
     "@babel/preset-env": "^7",
     "@babel/preset-react": "^7",
     "@babel/preset-typescript": "^7",
+    "@types/eslint": "^8",
     "@types/node": "^18",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
     "babel-loader": "^9",
     "css-loader": "^6",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.2",
+    "eslint-plugin-react": "^7.33.2",
     "html-webpack-plugin": "^5",
     "mini-css-extract-plugin": "^2",
+    "prettier": "^3.1.1",
     "typescript": "^5",
     "webpack": "^5",
     "webpack-cli": "^5",
