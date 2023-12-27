@@ -7,24 +7,35 @@ import { ThemeProvider } from "@cbhq/cds-web/system/ThemeProvider";
 import { HStack, VStack } from "@cbhq/cds-web/layout";
 
 import "@cbhq/cds-web/globalStyles";
-
+import { Provider } from "react-redux";
 
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
+import store from "./store/store";
+import { useAppSelector } from "./store/hooks";
+
+export const WrappedApp = () => {
+  const count = useAppSelector((state) => state.slice.theme);
+  return (
+    <ThemeProvider scale="xLarge" spectrum="light">
+      <HStack height={"100vh"} width={"100%"}>
+        <Sidebar />
+        <VStack overflow="clip" width={"100%"}>
+          <Navbar />
+        </VStack>
+      </HStack>
+    </ThemeProvider>
+  );
+};
 
 export const App = () => (
-  <FeatureFlagProvider frontier>
-    <DevicePreferencesProvider>
-      <ThemeProvider scale="xLarge" spectrum="light">
+  <Provider store={store}>
+    <FeatureFlagProvider frontier>
+      <DevicePreferencesProvider>
         <PortalProvider>
-          <HStack height={'100vh'} width={'100%'}>
-            <Sidebar />
-            <VStack overflow="clip" width={'100%'}>
-              <Navbar />
-            </VStack>
-          </HStack>
+          <WrappedApp />
         </PortalProvider>
-      </ThemeProvider>
-    </DevicePreferencesProvider>
-  </FeatureFlagProvider>
+      </DevicePreferencesProvider>
+    </FeatureFlagProvider>
+  </Provider>
 );

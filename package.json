@@ -17,8 +17,10 @@
     "@cbhq/cds-icons": "^2.3.0",
     "@cbhq/cds-illustrations": "^2.6.0",
     "@cbhq/cds-web": "^5.15.3",
+    "@reduxjs/toolkit": "^2.0.1",
     "react": "^18.2",
-    "react-dom": "^18.2"
+    "react-dom": "^18.2",
+    "react-redux": "^9.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7",
