@@ -14,6 +14,7 @@ import Navbar from "./components/Navbar";
 import store from "./store/store";
 import { useAppSelector } from "./store/hooks";
 import Todolist from "./components/Todolist";
+import TodoModal from "./components/TodoModal";
 
 export const WrappedApp = () => {
   const count = useAppSelector((state) => state.slice.theme);
@@ -26,6 +27,7 @@ export const WrappedApp = () => {
           <Todolist />
         </VStack>
       </HStack>
+      <TodoModal />
     </ThemeProvider>
   );
 };

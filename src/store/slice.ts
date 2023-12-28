@@ -10,6 +10,7 @@ export interface SliceState {
   theme: "light" | "dark";
   todos: ITodos[];
   selectedLabel: string | null;
+  isTodoModalOpen: boolean;
 }
 
 const initialTodos: ITodos[] = [
@@ -17,26 +18,27 @@ const initialTodos: ITodos[] = [
     id: 1,
     text: "Learn Redux Toolkit",
     completed: false,
-    labels: ["study"]
+    labels: ["study"],
   },
   {
     id: 2,
     text: "Learn React",
     completed: true,
-    labels: ["study", "work"]
+    labels: ["study", "work"],
   },
   {
     id: 3,
     text: "Build a todo app",
     completed: true,
-    labels: ["work", "fun"]
-  }
-]
+    labels: ["work", "fun"],
+  },
+];
 
 const initialState: SliceState = {
   theme: "light",
   todos: initialTodos,
   selectedLabel: null,
+  isTodoModalOpen: false,
 };
 
 export const slice = createSlice({
@@ -52,14 +54,28 @@ export const slice = createSlice({
     toggleTodoComplete: (state, action) => {
       return {
         ...state,
-        todos: state.todos.map(todo =>
-          todo.id === action.payload ? { ...todo, completed: !todo.completed } : todo
+        todos: state.todos.map((todo) =>
+          todo.id === action.payload
+            ? { ...todo, completed: !todo.completed }
+            : todo
         ),
       };
-    }
+    },
+    setIsTodoModalOpen: (state, action) => {
+      state.isTodoModalOpen = action.payload;
+    },
+    addTodo: (state, action) => {
+      state.todos.push(action.payload);
+    },
   },
 });
 
-export const { setTheme, setSelectedLabel, toggleTodoComplete } = slice.actions;
+export const {
+  setTheme,
+  setSelectedLabel,
+  toggleTodoComplete,
+  setIsTodoModalOpen,
+  addTodo,
+} = slice.actions;
 
 export default slice.reducer;

@@ -5,7 +5,7 @@ import { LogoMark } from "@cbhq/cds-web/icons/LogoMark";
 import { useToggler } from "@cbhq/cds-common";
 import { Divider, VStack } from "@cbhq/cds-web/layout";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { setSelectedLabel } from "../store/slice";
+import { setIsTodoModalOpen, setSelectedLabel } from "../store/slice";
 import { IconButton } from "@cbhq/cds-web/buttons";
 
 function Sidebar() {
@@ -34,6 +34,7 @@ function Sidebar() {
           accessibilityLabel="Add new todo"
           variant="primary"
           onPress={console.log}
+          onClick={() => dispatch(setIsTodoModalOpen(true))}
         />
       )}
     >
