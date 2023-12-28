@@ -3,7 +3,6 @@ import React, { useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { ListCell } from "@cbhq/cds-web/cells/ListCell";
 import { Chip } from "@cbhq/cds-web/chips/Chip";
-import { useToggler } from "@cbhq/cds-common";
 import { Checkbox } from "@cbhq/cds-web/controls/Checkbox";
 import { Pressable } from "@cbhq/cds-web/system";
 import { setSelectedLabel, toggleTodoComplete } from "../store/slice";
@@ -23,12 +22,13 @@ function Todolist() {
   }, [todos, selectedLabel]);
 
   const sortedTodos = useMemo(() => {
-    return [...filteredTodos].sort((a, b) => (a.completed === b.completed ? 0 : a.completed ? 1 : -1));
+    return [...filteredTodos].sort((a, b) =>
+      a.completed === b.completed ? 0 : a.completed ? 1 : -1
+    );
   }, [filteredTodos]);
 
-  const [isChecked, { toggle }] = useToggler();
   return (
-    <VStack>
+    <VStack background={"background"} height={"100vh"}>
       {sortedTodos?.map((todo) => (
         <VStack>
           <ListCell

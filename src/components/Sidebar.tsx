@@ -49,7 +49,7 @@ function Sidebar() {
         {Array.from(uniqueLabels).map((label) => (
           <SidebarItem
             title={label as string}
-            icon="pay"
+            icon="tag"
             key={`sidebar-item--${label}`}
             active={label === selectedLabel}
             onPress={() => dispatch(setSelectedLabel(label))}

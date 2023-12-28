@@ -17,9 +17,9 @@ import Todolist from "./components/Todolist";
 import TodoModal from "./components/TodoModal";
 
 export const WrappedApp = () => {
-  const count = useAppSelector((state) => state.slice.theme);
+  const theme = useAppSelector((state) => state.slice.theme);
   return (
-    <ThemeProvider scale="xLarge" spectrum="light">
+    <ThemeProvider scale="xLarge" spectrum={theme}>
       <HStack height={"100vh"} width={"100%"}>
         <Sidebar />
         <VStack overflow="clip" width={"100%"}>
