@@ -1,7 +1,10 @@
-import { createRoot } from 'react-dom/client';
-import { App } from './App';
+import "@cbhq/cds-icons/fonts/web/icon-font.css";
+import "@cbhq/cds-fonts/fonts.css";
 
-const node = document.createElement('div') as Element;
+import { createRoot } from "react-dom/client";
+import { App } from "./App";
+
+const node = document.createElement("div") as Element;
 
 document.body.appendChild(node);
 

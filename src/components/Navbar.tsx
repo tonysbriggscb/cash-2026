@@ -1,13 +1,11 @@
 import React, { useCallback } from "react";
 import { NavigationBar } from "@cbhq/cds-web/navigation/NavigationBar";
 import { NavigationTitle } from "@cbhq/cds-web/navigation/NavigationTitle";
-import { Avatar } from "@cbhq/cds-web/media/Avatar";
 import { HStack } from "@cbhq/cds-web/layout";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { Switch } from "@cbhq/cds-web/controls/Switch";
 import { setTheme } from "../store/slice";
 import { NavigationIcon } from "@cbhq/cds-web/icons/NavigationIcon";
-import { Pressable } from "@cbhq/cds-web/system";
 
 function Navbar() {
   // redux
@@ -37,10 +35,6 @@ function Navbar() {
               <NavigationIcon name={"moon"} />
             </Switch>
           </HStack>
-          {/* <Avatar alt="Sid" name="Sid" size="xl" colorScheme="gray" /> */}
-          <Pressable onPress={() => {}} backgroundColor="background">
-            <NavigationIcon name={"hammer"} />
-          </Pressable>
         </HStack>
       }
     >

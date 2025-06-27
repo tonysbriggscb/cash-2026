@@ -28,17 +28,18 @@ function Todolist() {
   }, [filteredTodos]);
 
   return (
-    <VStack background={"background"} height={"100vh"}>
+    <VStack background={"bg"} height={"100vh"}>
       {sortedTodos?.map((todo) => (
-        <VStack>
+        <VStack key={todo.id}>
           <ListCell
             title={todo.text}
             description={
-              <HStack spacingTop={1} gap={1}>
+              <HStack paddingTop={1} gap={1}>
                 {[...todo.labels].sort().map((label) => (
                   <Pressable
-                    backgroundColor="transparent"
-                    onPress={() => dispatch(setSelectedLabel(label))}
+                    key={label}
+                    background="transparent"
+                    onClick={() => dispatch(setSelectedLabel(label))}
                   >
                     <Chip>{label}</Chip>
                   </Pressable>

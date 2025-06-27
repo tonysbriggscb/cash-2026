@@ -1,8 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { Sidebar as CDSSidebar } from "@cbhq/cds-web/navigation/Sidebar";
 import { SidebarItem } from "@cbhq/cds-web/navigation/SidebarItem";
 import { LogoMark } from "@cbhq/cds-web/icons/LogoMark";
-import { useToggler } from "@cbhq/cds-common";
 import { Divider, VStack } from "@cbhq/cds-web/layout";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { setIsTodoModalOpen, setSelectedLabel } from "../store/slice";
@@ -13,8 +12,6 @@ function Sidebar() {
   const todos = useAppSelector((state) => state.slice.todos);
   const selectedLabel = useAppSelector((state) => state.slice.selectedLabel);
   const dispatch = useAppDispatch();
-
-  const [isCollapsed, toggleCollapsed] = useToggler(false);
   const uniqueLabels = useMemo(() => {
     const labels = new Set();
     todos.forEach((todo) => {
@@ -26,14 +23,13 @@ function Sidebar() {
   }, [todos]);
   return (
     <CDSSidebar
-      collapsed={isCollapsed}
+      collapsed={false}
       logo={<LogoMark />}
-      renderEnd={(isCollapsed) => (
+      renderEnd={() => (
         <IconButton
           name="add"
           accessibilityLabel="Add new todo"
           variant="primary"
-          onPress={console.log}
           onClick={() => dispatch(setIsTodoModalOpen(true))}
         />
       )}
@@ -42,9 +38,9 @@ function Sidebar() {
         active={selectedLabel === null}
         title="All"
         icon="newsfeed"
-        onPress={() => dispatch(setSelectedLabel(null))}
+        onClick={() => dispatch(setSelectedLabel(null))}
       />
-      <Divider spacingVertical={1} />
+      <Divider />
       <VStack>
         {Array.from(uniqueLabels).map((label) => (
           <SidebarItem
@@ -52,7 +48,7 @@ function Sidebar() {
             icon="tag"
             key={`sidebar-item--${label}`}
             active={label === selectedLabel}
-            onPress={() => dispatch(setSelectedLabel(label))}
+            onClick={() => dispatch(setSelectedLabel(label))}
             tooltipContent={label as string}
           />
         ))}

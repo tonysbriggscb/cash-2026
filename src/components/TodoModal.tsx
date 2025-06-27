@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useId, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Modal } from "@cbhq/cds-web/overlays/Modal/Modal";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { Button } from "@cbhq/cds-web/buttons";
@@ -102,7 +102,8 @@ function TodoModal() {
             <HStack gap={1}>
               {formState.labels.map((label) => (
                 <InputChip
-                  onPress={() =>
+                  key={label}
+                  onClick={() =>
                     setFormState({
                       ...formState,
                       labels: formState.labels.filter((l) => l !== label),
@@ -116,9 +117,9 @@ function TodoModal() {
         </form>
       </ModalBody>
       <ModalFooter
-        primaryAction={<Button onPress={handleSave}>Save</Button>}
+        primaryAction={<Button onClick={handleSave}>Save</Button>}
         secondaryAction={
-          <Button variant="secondary" onPress={handleModelClose}>
+          <Button variant="secondary" onClick={handleModelClose}>
             Cancel
           </Button>
         }
