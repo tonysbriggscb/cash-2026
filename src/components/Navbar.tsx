@@ -5,7 +5,7 @@ import { HStack } from "@cbhq/cds-web/layout";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { Switch } from "@cbhq/cds-web/controls/Switch";
 import { setTheme } from "../store/slice";
-import { NavigationIcon } from "@cbhq/cds-web/icons/NavigationIcon";
+import { Icon } from "@cbhq/cds-web/icons/Icon";
 
 function Navbar() {
   // redux
@@ -32,7 +32,7 @@ function Navbar() {
           <HStack>
             <Switch onChange={handleChange} checked={theme === "dark"}>
               {/* Dark Mode */}
-              <NavigationIcon name={"moon"} />
+              <Icon name={"moon"} color="fg" />
             </Switch>
           </HStack>
         </HStack>

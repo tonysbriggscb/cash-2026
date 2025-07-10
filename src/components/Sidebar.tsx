@@ -31,6 +31,7 @@ function Sidebar() {
           accessibilityLabel="Add new todo"
           variant="primary"
           onClick={() => dispatch(setIsTodoModalOpen(true))}
+          active
         />
       )}
     >
