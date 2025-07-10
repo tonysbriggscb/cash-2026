@@ -55,4 +55,7 @@ module.exports = {
       ignoreOrder: true,
     }),
   ],
+  performance: {
+    hints: false,
+  }
 };

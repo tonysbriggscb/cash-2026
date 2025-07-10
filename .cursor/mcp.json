@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "cds-mcp": {
+      "command": "npx",
+      "args": [
+        "--prefix",
+        ".",
+        "cds-mcp"
+      ]
+    }
+  }
+}

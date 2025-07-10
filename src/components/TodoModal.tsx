@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Modal } from "@cbhq/cds-web/overlays/Modal/Modal";
+import { Modal } from "@cbhq/cds-web/overlays/modal/Modal";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { Button } from "@cbhq/cds-web/buttons";
-import { ModalBody } from "@cbhq/cds-web/overlays/Modal/ModalBody";
-import { ModalFooter } from "@cbhq/cds-web/overlays/Modal/ModalFooter";
+import { ModalBody } from "@cbhq/cds-web/overlays/modal/ModalBody";
+import { ModalFooter } from "@cbhq/cds-web/overlays/modal/ModalFooter";
 import { addTodo, setIsTodoModalOpen } from "../store/slice";
 import { HStack, VStack } from "@cbhq/cds-web/layout";
 import { TextInput } from "@cbhq/cds-web/controls/TextInput";
