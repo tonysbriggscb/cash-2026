@@ -38,7 +38,7 @@ function Sidebar() {
       <SidebarItem
         active={selectedLabel === null}
         title="All"
-        icon="newsfeed"
+        icon="newsFeed"
         onClick={() => dispatch(setSelectedLabel(null))}
       />
       <Divider />
