@@ -1,6 +1,6 @@
 # CDS Playground
 
-A playground environment for building prototypes with Coinbase Design System (CDS) outside the main frontend/cds repository.
+A playground environment for building prototypes with Coinbase Design System (CDS).
 
 <img src="cover.webp" alt="CDS Playground Cover" width="1200">
 
@@ -11,7 +11,7 @@ yarn install
 yarn dev
 ```
 
-Visit `http://localhost:8081` to see your app.
+Visit `http://localhost:8080` to see your app.
 
 ## 📱 Demo App
 
