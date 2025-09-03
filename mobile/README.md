@@ -25,15 +25,16 @@ This will start the Expo development server. You can then:
 
 ## 📱 Demo App
 
-The current app is a simple Expo blank template. This serves as a starting point for building mobile prototypes with CDS components.
+The current app is a simple Expo blank template with TypeScript support. This serves as a starting point for building mobile prototypes with CDS components.
 
 ## 🔧 Building Your Own Mobile Prototype
 
-This is a standard Expo app, so you can:
+This is a standard Expo app with TypeScript, so you can:
 
-1. **Edit `App.js`** to create your mobile prototype
+1. **Edit `App.tsx`** to create your mobile prototype
 2. **Add CDS mobile components** (when available)
-3. **Use standard React Native components** for now
+3. **Use standard React Native components** with full TypeScript support
+4. **Enjoy type safety and IntelliSense** for better development experience
 
 ## 📚 Resources
 

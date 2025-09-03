@@ -9,7 +9,7 @@ A playground environment for building prototypes with Coinbase Design System (CD
 This monorepo contains:
 
 - **`web/`** - React web application playground using CDS Web components
-- **`mobile/`** - React Native/Expo mobile application playground
+- **`mobile/`** - React Native/Expo mobile application playground with TypeScript
 
 ## 🚀 Getting Started
 
