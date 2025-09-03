@@ -10,7 +10,12 @@
     "web:build": "yarn workspace cds-playground-web build",
     "web:start": "yarn workspace cds-playground-web start",
     "web:lint": "yarn workspace cds-playground-web lint",
-    "web:format": "yarn workspace cds-playground-web format"
+    "web:format": "yarn workspace cds-playground-web format",
+    "mobile:dev": "yarn workspace cds-playground-mobile dev",
+    "mobile:start": "yarn workspace cds-playground-mobile start",
+    "mobile:android": "yarn workspace cds-playground-mobile android",
+    "mobile:ios": "yarn workspace cds-playground-mobile ios",
+    "mobile:web": "yarn workspace cds-playground-mobile web"
   },
   "engines": {
     "node": "^18.19"
