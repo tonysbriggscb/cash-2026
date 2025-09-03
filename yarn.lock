@@ -101,7 +101,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.11.6, @babel/core@npm:^7.12.3, @babel/core@npm:^7.20.0, @babel/core@npm:^7.25.2":
+"@babel/core@npm:^7.11.6, @babel/core@npm:^7.12.3, @babel/core@npm:^7.20.0, @babel/core@npm:^7.25.2, @babel/core@npm:^7.26.0":
   version: 7.28.3
   resolution: "@babel/core@npm:7.28.3::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40babel%2Fcore%2F-%2Fcore-7.28.3.tgz"
   dependencies:
@@ -3278,10 +3278,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native/assets-registry@npm:0.79.6":
-  version: 0.79.6
-  resolution: "@react-native/assets-registry@npm:0.79.6::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fassets-registry%2F-%2Fassets-registry-0.79.6.tgz"
-  checksum: 22e8c1767cf6b36e205758030914de1c3ee287a62745afbf91800a44d6a3a06d07b29b13cb62531c2774ce441b7a39507a273c6cb90a38be872d2f0ff0d91222
+"@react-native/assets-registry@npm:0.79.5":
+  version: 0.79.5
+  resolution: "@react-native/assets-registry@npm:0.79.5::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fassets-registry%2F-%2Fassets-registry-0.79.5.tgz"
+  checksum: 509708a2e83bbdbcab36074dd4147bb48e35fa613279a9e5d8829d6cc0b0d1615a0fe904f2e1268a49703f4f592ec0461718f0e1a0e99aee53bdf566ebf48950
   languageName: node
   linkType: hard
 
@@ -3357,6 +3357,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native/codegen@npm:0.79.5":
+  version: 0.79.5
+  resolution: "@react-native/codegen@npm:0.79.5::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fcodegen%2F-%2Fcodegen-0.79.5.tgz"
+  dependencies:
+    glob: "npm:^7.1.1"
+    hermes-parser: "npm:0.25.1"
+    invariant: "npm:^2.2.4"
+    nullthrows: "npm:^1.1.1"
+    yargs: "npm:^17.6.2"
+  peerDependencies:
+    "@babel/core": "*"
+  checksum: a642d32e416d261799eb0677a6618bbb15d1274fb14951cf76e3c37b3d427bc2cba5e34885ffcb76131c5c50b3982771de8668917916ab86a1a1e3b3c49ea0e0
+  languageName: node
+  linkType: hard
+
 "@react-native/codegen@npm:0.79.6":
   version: 0.79.6
   resolution: "@react-native/codegen@npm:0.79.6::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fcodegen%2F-%2Fcodegen-0.79.6.tgz"
@@ -3391,11 +3406,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native/community-cli-plugin@npm:0.79.6":
-  version: 0.79.6
-  resolution: "@react-native/community-cli-plugin@npm:0.79.6::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fcommunity-cli-plugin%2F-%2Fcommunity-cli-plugin-0.79.6.tgz"
+"@react-native/community-cli-plugin@npm:0.79.5":
+  version: 0.79.5
+  resolution: "@react-native/community-cli-plugin@npm:0.79.5::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fcommunity-cli-plugin%2F-%2Fcommunity-cli-plugin-0.79.5.tgz"
   dependencies:
-    "@react-native/dev-middleware": "npm:0.79.6"
+    "@react-native/dev-middleware": "npm:0.79.5"
     chalk: "npm:^4.0.0"
     debug: "npm:^2.2.0"
     invariant: "npm:^2.2.4"
@@ -3408,7 +3423,7 @@ __metadata:
   peerDependenciesMeta:
     "@react-native-community/cli":
       optional: true
-  checksum: ccce2bd761f0af08ddd8c7909930009da75b3f4622378eb686696584ccdee9193cadb6c33fda0d5b0faad0ee351f4542eedda1546a1db09726a9b82ed3f6c141
+  checksum: b941281cf891df4c75840ecee4d5bb309fb746c8ba89f0adc3cb41a85f192e9ee613ca603ecaed2f1aee69e966f92bf3bc835c12a1a69fcf1236a6bd78518178
   languageName: node
   linkType: hard
 
@@ -3435,6 +3450,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native/debugger-frontend@npm:0.79.5":
+  version: 0.79.5
+  resolution: "@react-native/debugger-frontend@npm:0.79.5::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fdebugger-frontend%2F-%2Fdebugger-frontend-0.79.5.tgz"
+  checksum: d9556110ad0e59b0d800fb159bfb1b118056f3176c5940a242a058e8deee2c2f0eeb47b3d7ab474127b37e3caebe07738cd0022bfa9c4865b7e42336a4f52c53
+  languageName: node
+  linkType: hard
+
 "@react-native/debugger-frontend@npm:0.79.6":
   version: 0.79.6
   resolution: "@react-native/debugger-frontend@npm:0.79.6::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fdebugger-frontend%2F-%2Fdebugger-frontend-0.79.6.tgz"
@@ -3446,6 +3468,25 @@ __metadata:
   version: 0.81.1
   resolution: "@react-native/debugger-frontend@npm:0.81.1::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fdebugger-frontend%2F-%2Fdebugger-frontend-0.81.1.tgz"
   checksum: ce772bf32675234d66c539616e0524e08bfe9165bd2c93496974509d94ebc2b772cd5ed311adaa0f44a6e45e74c156df49063e8ae79b28f9ecd913fbc5318c7d
+  languageName: node
+  linkType: hard
+
+"@react-native/dev-middleware@npm:0.79.5":
+  version: 0.79.5
+  resolution: "@react-native/dev-middleware@npm:0.79.5::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fdev-middleware%2F-%2Fdev-middleware-0.79.5.tgz"
+  dependencies:
+    "@isaacs/ttlcache": "npm:^1.4.1"
+    "@react-native/debugger-frontend": "npm:0.79.5"
+    chrome-launcher: "npm:^0.15.2"
+    chromium-edge-launcher: "npm:^0.2.0"
+    connect: "npm:^3.6.5"
+    debug: "npm:^2.2.0"
+    invariant: "npm:^2.2.4"
+    nullthrows: "npm:^1.1.1"
+    open: "npm:^7.0.3"
+    serve-static: "npm:^1.16.2"
+    ws: "npm:^6.2.3"
+  checksum: baa7b37711211aec9537725de77d082f5f9ec777107f3e7a7e93a67aa07b1da79f851f37dacc65bec3d012df4d352941e02fc1153ad19602258b641c78318065
   languageName: node
   linkType: hard
 
@@ -3487,10 +3528,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native/gradle-plugin@npm:0.79.6":
-  version: 0.79.6
-  resolution: "@react-native/gradle-plugin@npm:0.79.6::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fgradle-plugin%2F-%2Fgradle-plugin-0.79.6.tgz"
-  checksum: cd970418e5d9e177c8104e0b299fb6be02b33ccec2ab4390ce7674b3fd27c30c7c39c55761fd05bd604863862527741632e46978d5e39b7d1fcae2d9f4c027ba
+"@react-native/gradle-plugin@npm:0.79.5":
+  version: 0.79.5
+  resolution: "@react-native/gradle-plugin@npm:0.79.5::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fgradle-plugin%2F-%2Fgradle-plugin-0.79.5.tgz"
+  checksum: b21b66f1415cec14235e380fe5c89a3dac46e561c2ce20a4864890ccd3251441967c359668121c9c2dd13705f1784d27c260e5fc23692d3498be9ed1af0d0c7c
   languageName: node
   linkType: hard
 
@@ -3501,10 +3542,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native/js-polyfills@npm:0.79.6":
-  version: 0.79.6
-  resolution: "@react-native/js-polyfills@npm:0.79.6::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fjs-polyfills%2F-%2Fjs-polyfills-0.79.6.tgz"
-  checksum: 46656e4a7114703585e1bf77699610b425272672d147a8146b62eff8b76555baaf9a877243bb1d27c4c64caef5af64aaae313798119fd7ba59d52d7fca53ad5d
+"@react-native/js-polyfills@npm:0.79.5":
+  version: 0.79.5
+  resolution: "@react-native/js-polyfills@npm:0.79.5::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fjs-polyfills%2F-%2Fjs-polyfills-0.79.5.tgz"
+  checksum: 42a23ce0ebfece40bde68f454a79bf4df0a3dd685a72e9887b4b2bb5751ebe60cabd42f094134c70f940f16f65865109caf357b465e74c9809d36b9b55076c03
   languageName: node
   linkType: hard
 
@@ -3512,6 +3553,13 @@ __metadata:
   version: 0.81.1
   resolution: "@react-native/js-polyfills@npm:0.81.1::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fjs-polyfills%2F-%2Fjs-polyfills-0.81.1.tgz"
   checksum: 2cd9ccb46bec96c849537087458769d85952a2e9200b7d9a66a2db65dca9a0a3c21d7339e7bd63a8fef21c60f0ab77e6686fbebd277c9e7f708720c720d9a9f4
+  languageName: node
+  linkType: hard
+
+"@react-native/normalize-colors@npm:0.79.5":
+  version: 0.79.5
+  resolution: "@react-native/normalize-colors@npm:0.79.5::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fnormalize-colors%2F-%2Fnormalize-colors-0.79.5.tgz"
+  checksum: c2ec87cacba9439f17dede82befd9c9bd4a8b0ed2fdd508765609119e233bed75cf9097364f9e39633686d98061bab9577d08b2c93956e93a99210a49ca9022a
   languageName: node
   linkType: hard
 
@@ -3529,9 +3577,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native/virtualized-lists@npm:0.79.6":
-  version: 0.79.6
-  resolution: "@react-native/virtualized-lists@npm:0.79.6::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fvirtualized-lists%2F-%2Fvirtualized-lists-0.79.6.tgz"
+"@react-native/virtualized-lists@npm:0.79.5":
+  version: 0.79.5
+  resolution: "@react-native/virtualized-lists@npm:0.79.5::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40react-native%2Fvirtualized-lists%2F-%2Fvirtualized-lists-0.79.5.tgz"
   dependencies:
     invariant: "npm:^2.2.4"
     nullthrows: "npm:^1.1.1"
@@ -3542,7 +3590,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 1d5e8091a9e8bf568290f9bfa9c97a7c67e02a9bea6ad9b7228b2cf07953f37894bc11d08433f713ad80f6d462a962b26528213bd3d38b0142e2e609110472c0
+  checksum: 5893ed81d5eee8b46106e501f7695d83a823b5432c43088ba7bc6322d344b6846d9bc9cb77319531ea29384d039f362bf7a5f14955e7c63d392f9b2a740304e9
   languageName: node
   linkType: hard
 
@@ -3966,6 +4014,15 @@ __metadata:
     "@types/scheduler": "npm:*"
     csstype: "npm:^3.0.2"
   checksum: bd27fd8a959fa776965997af89cb04e43e7868416850fdff421b5539f389efa35acae3d55915c9f32d7b00fb388550302bf8a7f06010abf9ad431e5bf58cb774
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:~19.0.10":
+  version: 19.0.14
+  resolution: "@types/react@npm:19.0.14::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2F%40types%2Freact%2F-%2Freact-19.0.14.tgz"
+  dependencies:
+    csstype: "npm:^3.0.2"
+  checksum: caf4572aae4f7efd049138bc4917f465a8e00abb362fcf6e6f82c9ed88fc42555109f0a3be7a738ed5efbdd51b0f0a4256f7d5141545f29fb7dc31b8e872aa4b
   languageName: node
   linkType: hard
 
@@ -5412,14 +5469,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "cds-playground-mobile@workspace:mobile"
   dependencies:
-    "@babel/core": "npm:^7"
-    "@types/react": "npm:^18"
+    "@babel/core": "npm:^7.26.0"
+    "@types/react": "npm:~19.0.10"
     "@types/react-native": "npm:^0.73"
     expo: "npm:~53.0.22"
     expo-status-bar: "npm:~2.2.3"
-    react: "npm:^18.3.1"
-    react-native: "npm:0.79.6"
-    typescript: "npm:^5"
+    react: "npm:19.0.0"
+    react-native: "npm:0.79.5"
+    typescript: "npm:~5.8.3"
   languageName: unknown
   linkType: soft
 
@@ -11168,18 +11225,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native@npm:0.79.6":
-  version: 0.79.6
-  resolution: "react-native@npm:0.79.6::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2Freact-native%2F-%2Freact-native-0.79.6.tgz"
+"react-native@npm:0.79.5":
+  version: 0.79.5
+  resolution: "react-native@npm:0.79.5::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2Freact-native%2F-%2Freact-native-0.79.5.tgz"
   dependencies:
     "@jest/create-cache-key-function": "npm:^29.7.0"
-    "@react-native/assets-registry": "npm:0.79.6"
-    "@react-native/codegen": "npm:0.79.6"
-    "@react-native/community-cli-plugin": "npm:0.79.6"
-    "@react-native/gradle-plugin": "npm:0.79.6"
-    "@react-native/js-polyfills": "npm:0.79.6"
-    "@react-native/normalize-colors": "npm:0.79.6"
-    "@react-native/virtualized-lists": "npm:0.79.6"
+    "@react-native/assets-registry": "npm:0.79.5"
+    "@react-native/codegen": "npm:0.79.5"
+    "@react-native/community-cli-plugin": "npm:0.79.5"
+    "@react-native/gradle-plugin": "npm:0.79.5"
+    "@react-native/js-polyfills": "npm:0.79.5"
+    "@react-native/normalize-colors": "npm:0.79.5"
+    "@react-native/virtualized-lists": "npm:0.79.5"
     abort-controller: "npm:^3.0.0"
     anser: "npm:^1.4.9"
     ansi-regex: "npm:^5.0.0"
@@ -11216,7 +11273,7 @@ __metadata:
       optional: true
   bin:
     react-native: cli.js
-  checksum: 2576e4d8d5d0e35e220fce6c8d3cff688a0ada43554e4df86013736b81be031b14bee6db6cb0ed222974257155143fec63f033de9779d59c7426af58ee186906
+  checksum: 3c33e09d276ce29638be69a8c7ca598c19131e95a9973abd86c2bbd99b1b02d3c161020bdc633394b4cde661d61347f55af2e6676e542188ce04709b75099c49
   languageName: node
   linkType: hard
 
@@ -11273,6 +11330,13 @@ __metadata:
     react-dom:
       optional: true
   checksum: d3cbd359b97728654904a7b3b42c2bcac95596702d482bd497362869eeb040f0e585eb7073cfe76a6055783215581f5db5d2be3ba5b78668f0dd0be5b3330e67
+  languageName: node
+  linkType: hard
+
+"react@npm:19.0.0":
+  version: 19.0.0
+  resolution: "react@npm:19.0.0::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2Freact%2F-%2Freact-19.0.0.tgz"
+  checksum: 2490969c503f644703c88990d20e4011fa6119ddeca451e9de48f6d7ab058d670d2852a5fcd3aa3cd90a923ab2815d532637bd4a814add402ae5c0d4f129ee71
   languageName: node
   linkType: hard
 
@@ -12935,6 +12999,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:~5.8.3":
+  version: 5.8.3
+  resolution: "typescript@npm:5.8.3::__archiveUrl=https%3A%2F%2Fartifactory.cbhq.net%3A8081%2Fartifactory%2Fapi%2Fnpm%2Fcb-npm-master%2Ftypescript%2F-%2Ftypescript-5.8.3.tgz"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 65c40944c51b513b0172c6710ee62e951b70af6f75d5a5da745cb7fab132c09ae27ffdf7838996e3ed603bb015dadd099006658046941bd0ba30340cc563ae92
+  languageName: node
+  linkType: hard
+
 "typescript@patch:typescript@npm%3A^5#optional!builtin<compat/typescript>":
   version: 5.3.3
   resolution: "typescript@patch:typescript@npm%3A5.3.3%3A%3A__archiveUrl=https%253A%252F%252Fartifactory.cbhq.net%253A8081%252Fartifactory%252Fapi%252Fnpm%252Fcb-npm-master%252Ftypescript%252F-%252Ftypescript-5.3.3.tgz#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"
@@ -12942,6 +13016,16 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: c93786fcc9a70718ba1e3819bab56064ead5817004d1b8186f8ca66165f3a2d0100fee91fa64c840dcd45f994ca5d615d8e1f566d39a7470fc1e014dbb4cf15d
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@npm%3A~5.8.3#optional!builtin<compat/typescript>":
+  version: 5.8.3
+  resolution: "typescript@patch:typescript@npm%3A5.8.3%3A%3A__archiveUrl=https%253A%252F%252Fartifactory.cbhq.net%253A8081%252Fartifactory%252Fapi%252Fnpm%252Fcb-npm-master%252Ftypescript%252F-%252Ftypescript-5.8.3.tgz#optional!builtin<compat/typescript>::version=5.8.3&hash=e012d7"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 98470634034ec37fd9ea61cc82dcf9a27950d0117a4646146b767d085a2ec14b137aae9642a83d1c62732d7fdcdac19bb6288b0bb468a72f7a06ae4e1d2c72c9
   languageName: node
   linkType: hard
 
