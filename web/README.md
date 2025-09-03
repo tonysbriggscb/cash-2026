@@ -1,51 +1,39 @@
-# CDS Playground
+# CDS Web Playground
 
-A playground environment for building prototypes with Coinbase Design System (CDS) across web and mobile platforms.
-
-<img src="cover.webp" alt="CDS Playground Cover" width="1200">
-
-## 🏗️ Project Structure
-
-This monorepo contains:
-
-- **`web/`** - React web application playground using CDS Web components
-- **`mobile/`** - React Native/Expo mobile application playground (coming soon)
+A React web application playground for prototyping with Coinbase Design System (CDS) components.
 
 ## 🚀 Getting Started
 
-### Web Playground
+From the root directory:
 
 ```bash
 yarn install
 yarn web:dev
 ```
 
-Visit `http://localhost:8080` to see your web app.
-
-### Mobile Playground (Coming Soon)
+Or from this directory:
 
 ```bash
-yarn install
-# Mobile setup commands will be added here
+yarn dev
 ```
 
-## 📱 Web Demo App
+Visit `http://localhost:8080` to see your app.
 
-The current web app (`Demo`) is a todo list application that showcases various CDS components. It includes:
+## 📱 Demo App
+
+The current app (`Demo`) is a todo list application that showcases various CDS components:
 
 - Theme switching (light/dark)
 - Modal interactions
 - Layout components (HStack, VStack)
-- Form components
-- State management with Redux Toolkit
 
-## 🔧 Building Your Own Web Prototype
+## 🔧 Building Your Own Prototype
 
 **Super simple!** All the technical setup is handled automatically. Just focus on building with CDS:
 
-### Quick Start (Recommended)
+### Quick Start
 
-1. **Create your prototype component** (e.g., `web/src/MyPrototype.tsx`):
+1. **Create your prototype component** (e.g., `src/MyPrototype.tsx`):
 
    ```tsx
    import { HStack, VStack } from "@cbhq/cds-web/layout";
@@ -61,7 +49,7 @@ The current web app (`Demo`) is a todo list application that showcases various C
    );
    ```
 
-2. **Update the import in `web/src/App.tsx`** (just one line!):
+2. **Update the import in `src/App.tsx`**:
 
    ```tsx
    // Replace this line:
@@ -86,16 +74,8 @@ The current web app (`Demo`) is a todo list application that showcases various C
 
 ## 📝 Available Scripts
 
-### Web Scripts
-
-- `yarn web:dev` - Start web development server
-- `yarn web:build` - Build web app for production
-- `yarn web:start` - Start web production server
-- `yarn web:lint` - Lint web code
-- `yarn web:format` - Format web code
-
-### Mobile Scripts (Coming Soon)
-
-- Mobile scripts will be added when the mobile playground is set up
-
-Happy prototyping! 🎯
+- `yarn dev` - Start development server
+- `yarn build` - Build for production
+- `yarn start` - Start production server
+- `yarn lint` - Lint code
+- `yarn format` - Format code

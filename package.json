@@ -1,53 +1,19 @@
 {
   "name": "cds-playground",
+  "private": true,
+  "workspaces": [
+    "web",
+    "mobile"
+  ],
   "scripts": {
-    "dev": "webpack serve --mode=development",
-    "build": "webpack --mode=production",
-    "start": "webpack serve --mode=production",
-    "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet --fix",
-    "format": "prettier --write 'src/**/*.{js,ts,tsx}'"
+    "web:dev": "yarn workspace cds-playground-web dev",
+    "web:build": "yarn workspace cds-playground-web build",
+    "web:start": "yarn workspace cds-playground-web start",
+    "web:lint": "yarn workspace cds-playground-web lint",
+    "web:format": "yarn workspace cds-playground-web format"
   },
   "engines": {
     "node": "^18.19"
   },
-  "packageManager": "yarn@4.0.2",
-  "dependencies": {
-    "@cbhq/cds-common": "^8.7.2",
-    "@cbhq/cds-fonts": "^2.0.0",
-    "@cbhq/cds-icons": "^5.2.1",
-    "@cbhq/cds-illustrations": "^4.18.0",
-    "@cbhq/cds-web": "^8.7.2",
-    "@reduxjs/toolkit": "^2.0.1",
-    "framer-motion": "^10.18.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-redux": "^9.0.4",
-    "uuid": "^9.0.1"
-  },
-  "devDependencies": {
-    "@babel/core": "^7",
-    "@babel/preset-env": "^7",
-    "@babel/preset-react": "^7",
-    "@babel/preset-typescript": "^7",
-    "@types/eslint": "^8",
-    "@types/node": "^18",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "@types/uuid": "^9",
-    "@typescript-eslint/eslint-plugin": "^6.16.0",
-    "@typescript-eslint/parser": "^6.16.0",
-    "babel-loader": "^9",
-    "css-loader": "^6",
-    "eslint": "^8.56.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.1.2",
-    "eslint-plugin-react": "^7.33.2",
-    "html-webpack-plugin": "^5",
-    "mini-css-extract-plugin": "^2",
-    "prettier": "^3.1.1",
-    "typescript": "^5",
-    "webpack": "^5",
-    "webpack-cli": "^5",
-    "webpack-dev-server": "^4"
-  }
+  "packageManager": "yarn@4.0.2"
 }

@@ -3134,9 +3134,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cds-playground@workspace:.":
+"cds-playground-web@workspace:web":
   version: 0.0.0-use.local
-  resolution: "cds-playground@workspace:."
+  resolution: "cds-playground-web@workspace:web"
   dependencies:
     "@babel/core": "npm:^7"
     "@babel/preset-env": "npm:^7"
@@ -3173,6 +3173,12 @@ __metadata:
     webpack: "npm:^5"
     webpack-cli: "npm:^5"
     webpack-dev-server: "npm:^4"
+  languageName: unknown
+  linkType: soft
+
+"cds-playground@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "cds-playground@workspace:."
   languageName: unknown
   linkType: soft
 
