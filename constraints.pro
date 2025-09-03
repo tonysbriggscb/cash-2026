@@ -16,7 +16,10 @@ gen_enforced_dependency(WorkspaceCwd, DependencyIdent, DependencyRange2, Depende
     DependencyType2 \= 'peerDependencies',
   % Allow different React, Babel, and TypeScript versions between workspaces
     DependencyIdent \= 'react',
+    DependencyIdent \= 'react-dom',
+    DependencyIdent \= 'react-native',
     DependencyIdent \= '@types/react',
+    DependencyIdent \= '@types/react-native',
     DependencyIdent \= '@babel/core',
     DependencyIdent \= 'typescript',
   % Ignore devDependencies on other workspaces

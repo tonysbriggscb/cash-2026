@@ -4,7 +4,6 @@ import { defaultTheme } from "@cbhq/cds-web/themes/defaultTheme";
 
 import "@cbhq/cds-web/globalStyles";
 
-// Import your prototype component here
 import { Demo } from "./Demo";
 
 export const App = () => (

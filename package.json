@@ -2,7 +2,8 @@
   "name": "cds-playground",
   "private": true,
   "workspaces": [
-    "web"
+    "web",
+    "mobile"
   ],
   "scripts": {
     "web:dev": "yarn workspace cds-playground-web dev",
@@ -10,12 +11,12 @@
     "web:start": "yarn workspace cds-playground-web start",
     "web:lint": "yarn workspace cds-playground-web lint",
     "web:format": "yarn workspace cds-playground-web format",
-    "mobile:dev": "cd mobile && npm run dev",
-    "mobile:start": "cd mobile && npm start",
-    "mobile:android": "cd mobile && npm run android",
-    "mobile:ios": "cd mobile && npm run ios",
-    "mobile:web": "cd mobile && npm run web",
-    "mobile:install": "cd mobile && npm install"
+    "mobile:dev": "yarn workspace cds-playground-mobile dev",
+    "mobile:start": "yarn workspace cds-playground-mobile start",
+    "mobile:android": "yarn workspace cds-playground-mobile android",
+    "mobile:ios": "yarn workspace cds-playground-mobile ios",
+    "mobile:web": "yarn workspace cds-playground-mobile web",
+    "mobile:install": "yarn workspace cds-playground-mobile install"
   },
   "engines": {
     "node": "^18.19"

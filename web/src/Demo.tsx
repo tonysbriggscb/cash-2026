@@ -15,9 +15,9 @@ const WrappedDemo = () => {
   const colorScheme = useAppSelector((state) => state.slice.theme);
   return (
     <ThemeProvider activeColorScheme={colorScheme} theme={coinbaseTheme}>
-      <HStack height={"100vh"} width={"100%"}>
+      <HStack height="100vh" width="100%">
         <Sidebar />
-        <VStack overflow="clip" width={"100%"}>
+        <VStack overflow="clip" width="100%">
           <Navbar />
           <Todolist />
         </VStack>

@@ -39,7 +39,7 @@ This will start the Expo development server. You can then:
 
 - Press `i` to open iOS simulator
 - Press `a` to open Android emulator
-- Scan the QR code with Expo Go app on your device
+- Scan the QR code with Expo Go app on your device  (**note**: this is not currently working)
 
 ## 📱 Web Demo App
 
