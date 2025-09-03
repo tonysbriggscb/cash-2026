@@ -48,8 +48,6 @@ The current web app (`Demo`) is a todo list application that showcases various C
 - Theme switching (light/dark)
 - Modal interactions
 - Layout components (HStack, VStack)
-- Form components
-- State management with Redux Toolkit
 
 ## 🔧 Building Your Own Web Prototype
 
