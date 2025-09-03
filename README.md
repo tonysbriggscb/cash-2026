@@ -6,10 +6,16 @@ A playground environment for building prototypes with Coinbase Design System (CD
 
 ## 🏗️ Project Structure
 
-This monorepo contains:
+This repository contains:
 
-- **`web/`** - React web application playground using CDS Web components
-- **`mobile/`** - React Native/Expo mobile application playground with TypeScript
+- **`web/`** - React web application playground using CDS Web components (Yarn workspace)
+- **`mobile/`** - React Native/Expo mobile application playground with TypeScript (Standalone npm project)
+
+## 📋 Requirements
+
+- **Node.js**: v18.x or v20.x LTS (Expo requirement)
+- **Yarn**: v4.x for web workspace
+- **npm**: For mobile app dependencies
 
 ## 🚀 Getting Started
 
@@ -25,8 +31,8 @@ Visit `http://localhost:8080` to see your web app.
 ### Mobile Playground
 
 ```bash
-yarn install
-yarn mobile:dev
+yarn mobile:install  # Install mobile dependencies
+yarn mobile:dev      # Start Expo development server
 ```
 
 This will start the Expo development server. You can then:
