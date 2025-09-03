@@ -1,0 +1,33 @@
+diff --git a/build/src/start/server/metro/TerminalReporter.js b/build/src/start/server/metro/TerminalReporter.js
+index 1234567..abcdefg 100644
+--- a/build/src/start/server/metro/TerminalReporter.js
++++ b/build/src/start/server/metro/TerminalReporter.js
+@@ -29,7 +29,25 @@ function _chalk() {
+     return data;
+ }
+ function _TerminalReporter() {
+-    const data = /*#__PURE__*/ _interop_require_default(require("metro/src/lib/TerminalReporter"));
++    // Fix for Node.js 22+ compatibility with Metro bundler
++    let data;
++    try {
++        data = /*#__PURE__*/ _interop_require_default(require("metro/src/lib/TerminalReporter"));
++    } catch (error) {
++        // Fallback for Node.js 22+ where Metro doesn't export TerminalReporter
++        // Create a minimal TerminalReporter class that satisfies the interface
++        class TerminalReporter {
++            constructor(terminal) {
++                this.terminal = terminal;
++                this._bundleProgress = new Map();
++            }
++            update(event) {
++                // Minimal implementation - just log important events
++                if (event.type === 'bundle_build_failed' || event.type === 'bundling_error') {
++                    console.error('[Metro]', event.message || event.error);
++                }
++            }
++        }
++        data = { default: TerminalReporter };
++    }
+     _TerminalReporter = function() {
+         return data;
+     };

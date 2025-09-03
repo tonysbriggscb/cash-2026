@@ -1,35 +1,61 @@
 # CDS Playground
 
-A playground environment for building prototypes with Coinbase Design System (CDS).
+A playground environment for building prototypes with Coinbase Design System (CDS) across web and mobile platforms.
 
 <img src="cover.webp" alt="CDS Playground Cover" width="1200">
 
+## 🏗️ Project Structure
+
+This repository contains:
+
+- **`web/`** - React web application playground using CDS Web components (Yarn workspace)
+- **`mobile/`** - React Native/Expo mobile application playground with TypeScript (Standalone npm project)
+
+## 📋 Requirements
+
+- **Node.js**: v18.x or v20.x LTS (Expo requirement)
+- **Yarn**: v4.x for web workspace
+- **npm**: For mobile app dependencies
+
 ## 🚀 Getting Started
+
+### Web Playground
 
 ```bash
 yarn install
-yarn dev
+yarn web:dev
 ```
 
-Visit `http://localhost:8080` to see your app.
+Visit `http://localhost:8080` to see your web app.
 
-## 📱 Demo App
+### Mobile Playground
 
-The current app (`Demo`) is a todo list application that showcases various CDS components. It includes:
+```bash
+yarn mobile:install  # Install mobile dependencies
+yarn mobile:dev      # Start Expo development server
+```
+
+This will start the Expo development server. You can then:
+
+- Press `i` to open iOS simulator
+- Press `a` to open Android emulator
+- Scan the QR code with Expo Go app on your device
+
+## 📱 Web Demo App
+
+The current web app (`Demo`) is a todo list application that showcases various CDS components. It includes:
 
 - Theme switching (light/dark)
 - Modal interactions
 - Layout components (HStack, VStack)
-- Form components
-- State management with Redux Toolkit
 
-## 🔧 Building Your Own Prototype
+## 🔧 Building Your Own Web Prototype
 
 **Super simple!** All the technical setup is handled automatically. Just focus on building with CDS:
 
 ### Quick Start (Recommended)
 
-1. **Create your prototype component** (e.g., `src/MyPrototype.tsx`):
+1. **Create your prototype component** (e.g., `web/src/MyPrototype.tsx`):
 
    ```tsx
    import { HStack, VStack } from "@cbhq/cds-web/layout";
@@ -45,7 +71,7 @@ The current app (`Demo`) is a todo list application that showcases various CDS c
    );
    ```
 
-2. **Update the import in `src/App.tsx`** (just one line!):
+2. **Update the import in `web/src/App.tsx`** (just one line!):
 
    ```tsx
    // Replace this line:
@@ -70,10 +96,20 @@ The current app (`Demo`) is a todo list application that showcases various CDS c
 
 ## 📝 Available Scripts
 
-- `yarn dev` - Start development server
-- `yarn build` - Build for production
-- `yarn start` - Start production server
-- `yarn lint` - Lint code
-- `yarn format` - Format code
+### Web Scripts
+
+- `yarn web:dev` - Start web development server
+- `yarn web:build` - Build web app for production
+- `yarn web:start` - Start web production server
+- `yarn web:lint` - Lint web code
+- `yarn web:format` - Format web code
+
+### Mobile Scripts
+
+- `yarn mobile:dev` - Start Expo development server
+- `yarn mobile:start` - Start Expo development server
+- `yarn mobile:android` - Start on Android emulator
+- `yarn mobile:ios` - Start on iOS simulator
+- `yarn mobile:web` - Start mobile app in web browser
 
 Happy prototyping! 🎯
