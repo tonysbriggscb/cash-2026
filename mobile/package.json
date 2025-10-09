@@ -10,11 +10,10 @@
     "dev": "expo start"
   },
   "dependencies": {
-    "@cbhq/cds-common": "^8.7.2",
     "@cbhq/cds-fonts": "^2.0.0",
-    "@cbhq/cds-icons": "^5.2.1",
-    "@cbhq/cds-illustrations": "^4.18.0",
-    "@cbhq/cds-mobile": "^8.7.2",
+    "@coinbase/cds-icons": "^5",
+    "@coinbase/cds-illustrations": "^4",
+    "@coinbase/cds-mobile": "^8",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
     "@react-navigation/stack": "^6.4.1",

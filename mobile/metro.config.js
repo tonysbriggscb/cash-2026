@@ -25,10 +25,10 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   
   // List of CDS packages that need custom resolution
   const cdsPackages = [
-    '@cbhq/cds-mobile',
-    '@cbhq/cds-common', 
-    '@cbhq/cds-icons',
-    '@cbhq/cds-illustrations',
+    '@coinbase/cds-mobile',
+    '@coinbase/cds-common', 
+    '@coinbase/cds-icons',
+    '@coinbase/cds-illustrations',
     '@cbhq/cds-fonts'
   ];
   

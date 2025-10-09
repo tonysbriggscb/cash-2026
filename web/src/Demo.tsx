@@ -1,4 +1,4 @@
-import { HStack, VStack } from "@cbhq/cds-web/layout";
+import { HStack, VStack } from "@coinbase/cds-web/layout";
 import { Provider } from "react-redux";
 
 import Sidebar from "./components/Sidebar";
@@ -8,8 +8,8 @@ import { useAppSelector } from "./store/hooks";
 import Todolist from "./components/Todolist";
 import TodoModal from "./components/TodoModal";
 
-import { ThemeProvider } from "@cbhq/cds-web/system/ThemeProvider";
-import { coinbaseTheme } from "@cbhq/cds-web/themes/coinbaseTheme";
+import { ThemeProvider } from "@coinbase/cds-web/system/ThemeProvider";
+import { coinbaseTheme } from "@coinbase/cds-web/themes/coinbaseTheme";
 
 const WrappedDemo = () => {
   const colorScheme = useAppSelector((state) => state.slice.theme);

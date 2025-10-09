@@ -7,12 +7,15 @@ mobile/node_modules
 /.pnp
 .pnp.js
 .yarn/install-state.gz
+.yarn/cache
 
 # testing
 /coverage
 
 # production
 /dist
+/web/dist
+.vercel
 
 # misc
 .DS_Store

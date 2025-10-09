@@ -36,9 +36,9 @@ The current app (`Demo`) is a todo list application that showcases various CDS c
 1. **Create your prototype component** (e.g., `src/MyPrototype.tsx`):
 
    ```tsx
-   import { HStack, VStack } from "@cbhq/cds-web/layout";
-   import { Text, Heading } from "@cbhq/cds-web/typography";
-   import { Button } from "@cbhq/cds-web/forms";
+   import { HStack, VStack } from "@coinbase/cds-web/layout";
+   import { Text, Heading } from "@coinbase/cds-web/typography";
+   import { Button } from "@coinbase/cds-web/forms";
 
    export const MyPrototype = () => (
      <VStack padding="large" gap="medium">
@@ -66,8 +66,8 @@ The current app (`Demo`) is a todo list application that showcases various CDS c
 
 ## 📚 CDS Resources
 
-- **Components**: Use `@cbhq/cds-web` for web components
-- **Icons**: Import from `@cbhq/cds-icons`
+- **Components**: Use `@coinbase/cds-web` for web components
+- **Icons**: Import from `@coinbase/cds-icons`
 - **Fonts**: Already included via `@cbhq/cds-fonts`
 - **Themes**: Use `coinbaseTheme` or create custom themes
 - **Documentation**: Available in the main CDS repository

@@ -1,4 +1,4 @@
-import "@cbhq/cds-icons/fonts/web/icon-font.css";
+import "@coinbase/cds-icons/fonts/web/icon-font.css";
 import "@cbhq/cds-fonts/fonts.css";
 
 import { createRoot } from "react-dom/client";

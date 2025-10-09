@@ -1,13 +1,13 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Modal } from "@cbhq/cds-web/overlays/modal/Modal";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Modal } from "@coinbase/cds-web/overlays/modal/Modal";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { Button } from "@cbhq/cds-web/buttons";
-import { ModalBody } from "@cbhq/cds-web/overlays/modal/ModalBody";
-import { ModalFooter } from "@cbhq/cds-web/overlays/modal/ModalFooter";
+import { Button } from "@coinbase/cds-web/buttons";
+import { ModalBody } from "@coinbase/cds-web/overlays/modal/ModalBody";
+import { ModalFooter } from "@coinbase/cds-web/overlays/modal/ModalFooter";
 import { addTodo, setIsTodoModalOpen } from "../store/slice";
-import { HStack, VStack } from "@cbhq/cds-web/layout";
-import { TextInput } from "@cbhq/cds-web/controls/TextInput";
-import { InputChip } from "@cbhq/cds-web/chips/InputChip";
+import { HStack, VStack } from "@coinbase/cds-web/layout";
+import { TextInput } from "@coinbase/cds-web/controls/TextInput";
+import { InputChip } from "@coinbase/cds-web/chips/InputChip";
 import { v4 as uuidv4 } from "uuid";
 
 function TodoModal() {

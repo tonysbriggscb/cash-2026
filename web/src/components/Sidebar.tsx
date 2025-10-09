@@ -1,11 +1,11 @@
-import React, { useMemo } from "react";
-import { Sidebar as CDSSidebar } from "@cbhq/cds-web/navigation/Sidebar";
-import { SidebarItem } from "@cbhq/cds-web/navigation/SidebarItem";
-import { LogoMark } from "@cbhq/cds-web/icons/LogoMark";
-import { Divider, VStack } from "@cbhq/cds-web/layout";
+import { useMemo } from "react";
+import { Sidebar as CDSSidebar } from "@coinbase/cds-web/navigation/Sidebar";
+import { SidebarItem } from "@coinbase/cds-web/navigation/SidebarItem";
+import { LogoMark } from "@coinbase/cds-web/icons/LogoMark";
+import { Divider, VStack } from "@coinbase/cds-web/layout";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { setIsTodoModalOpen, setSelectedLabel } from "../store/slice";
-import { IconButton } from "@cbhq/cds-web/buttons";
+import { IconButton } from "@coinbase/cds-web/buttons";
 
 function Sidebar() {
   // redux

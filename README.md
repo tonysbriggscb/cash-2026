@@ -19,6 +19,16 @@ This repository contains:
 
 ## 🚀 Getting Started
 
+First, run the following
+
+```bash
+nvm install
+nvm use
+corepack enable
+```
+
+Then, run your platform specific commands:
+
 ### Web Playground
 
 ```bash
@@ -58,9 +68,9 @@ The current web app (`Demo`) is a todo list application that showcases various C
 1. **Create your prototype component** (e.g., `web/src/MyPrototype.tsx`):
 
    ```tsx
-   import { HStack, VStack } from "@cbhq/cds-web/layout";
-   import { Text, Heading } from "@cbhq/cds-web/typography";
-   import { Button } from "@cbhq/cds-web/forms";
+   import { HStack, VStack } from "@coinbase/cds-web/layout";
+   import { Text, Heading } from "@coinbase/cds-web/typography";
+   import { Button } from "@coinbase/cds-web/forms";
 
    export const MyPrototype = () => (
      <VStack padding="large" gap="medium">
@@ -88,8 +98,8 @@ The current web app (`Demo`) is a todo list application that showcases various C
 
 ## 📚 CDS Resources
 
-- **Components**: Use `@cbhq/cds-web` for web components
-- **Icons**: Import from `@cbhq/cds-icons`
+- **Components**: Use `@coinbase/cds-web` for web components
+- **Icons**: Import from `@coinbase/cds-icons`
 - **Fonts**: Already included via `@cbhq/cds-fonts`
 - **Themes**: Use `coinbaseTheme` or create custom themes
 - **Documentation**: Available in the main CDS repository
@@ -103,6 +113,27 @@ The current web app (`Demo`) is a todo list application that showcases various C
 - `yarn web:start` - Start web production server
 - `yarn web:lint` - Lint web code
 - `yarn web:format` - Format web code
+- `yarn web:deploy:vercel` - Deploy to Vercel preview environment
+- `yarn web:deploy:vercel:prod` - Deploy to Vercel production environment
+
+### 🚀 Deploying to Vercel
+
+1. **Install Vercel CLI** (one-time setup)
+   ```bash
+   npm i -g vercel
+   ```
+
+2. **Link your Vercel account** (one-time setup)
+   ```bash
+   vercel login
+   vercel link
+   ```
+
+3. **Deploy**
+   - For preview deployment: `yarn web:deploy:vercel`
+   - For production deployment: `yarn web:deploy:vercel:prod`
+
+The preview deployment will give you a unique URL for testing, while the production deployment will update your main domain.
 
 ### Mobile Scripts
 

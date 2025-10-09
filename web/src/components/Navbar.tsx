@@ -1,11 +1,11 @@
 import React, { useCallback } from "react";
-import { NavigationBar } from "@cbhq/cds-web/navigation/NavigationBar";
-import { NavigationTitle } from "@cbhq/cds-web/navigation/NavigationTitle";
-import { HStack } from "@cbhq/cds-web/layout";
+import { NavigationBar } from "@coinbase/cds-web/navigation/NavigationBar";
+import { NavigationTitle } from "@coinbase/cds-web/navigation/NavigationTitle";
+import { HStack } from "@coinbase/cds-web/layout";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { Switch } from "@cbhq/cds-web/controls/Switch";
+import { Switch } from "@coinbase/cds-web/controls/Switch";
 import { setTheme } from "../store/slice";
-import { Icon } from "@cbhq/cds-web/icons/Icon";
+import { Icon } from "@coinbase/cds-web/icons/Icon";
 
 function Navbar() {
   // redux

@@ -1,10 +1,10 @@
-import { Divider, HStack, VStack } from "@cbhq/cds-web/layout";
-import React, { useMemo } from "react";
+import { Divider, HStack, VStack } from "@coinbase/cds-web/layout";
+import  { useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { ListCell } from "@cbhq/cds-web/cells/ListCell";
-import { Chip } from "@cbhq/cds-web/chips/Chip";
-import { Checkbox } from "@cbhq/cds-web/controls/Checkbox";
-import { Pressable } from "@cbhq/cds-web/system";
+import { ListCell } from "@coinbase/cds-web/cells/ListCell";
+import { Chip } from "@coinbase/cds-web/chips/Chip";
+import { Checkbox } from "@coinbase/cds-web/controls/Checkbox";
+import { Pressable } from "@coinbase/cds-web/system";
 import { setSelectedLabel, toggleTodoComplete } from "../store/slice";
 
 function Todolist() {

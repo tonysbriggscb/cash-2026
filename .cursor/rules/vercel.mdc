@@ -1,0 +1,50 @@
+# Vercel Deployment Rules
+
+## Setup Requirements
+
+1. Vercel CLI must be installed globally using npm:
+   ```bash
+   npm i -g vercel
+   ```
+
+2. User must be logged in and project must be linked:
+   ```bash
+   vercel login
+   vercel link
+   ```
+
+## Deployment Guidelines
+
+### Preview Deployments
+- Use `yarn web:deploy:vercel` for preview deployments
+- Each preview deployment gets a unique URL
+- Perfect for testing changes before production
+- Automatically created for pull requests
+
+### Production Deployments
+- Use `yarn web:deploy:vercel:prod` for production deployments
+- Updates the main domain
+- Only deploy to production after testing in preview
+- Should be used sparingly and with confidence
+
+## Best Practices
+
+1. **Always test in preview first**
+   - Deploy to preview environment
+   - Test thoroughly
+   - Only then deploy to production
+
+2. **Dependency Management**
+   - Ensure all dependencies are at compatible versions
+   - Pay special attention to React and CDS package versions
+   - Fix any dependency conflicts before deployment
+
+3. **Build Process**
+   - The build process is handled automatically
+   - Uses the build script defined in package.json
+   - Includes TypeScript compilation and Vite build
+
+4. **Environment Variables**
+   - Manage through Vercel dashboard
+   - Never commit sensitive values
+   - Use different values for preview/production
