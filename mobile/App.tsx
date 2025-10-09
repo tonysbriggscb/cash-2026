@@ -5,7 +5,7 @@ import { useTheme } from "@coinbase/cds-mobile/hooks/useTheme";
 import { PortalProvider } from "@coinbase/cds-mobile/overlays/PortalProvider";
 import { StatusBar } from "@coinbase/cds-mobile/system/StatusBar";
 import { ThemeProvider } from "@coinbase/cds-mobile/system/ThemeProvider";
-import { coinbaseTheme } from "@coinbase/cds-mobile/themes/coinbaseTheme";
+import { defaultTheme } from "@coinbase/cds-mobile/themes/defaultTheme";
 import { useDeviceColorScheme } from "@coinbase/cds-mobile/hooks/useDeviceColorScheme";
 
 import { Demo } from "./Demo";
@@ -45,7 +45,7 @@ const App = memo(() => {
     <LocalStrictMode>
       <ThemeProvider
         activeColorScheme={deviceColorScheme}
-        theme={coinbaseTheme}
+        theme={defaultTheme}
       >
         <CdsSafeAreaProvider>
           <PortalProvider>

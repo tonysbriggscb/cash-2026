@@ -9,12 +9,12 @@ import Todolist from "./components/Todolist";
 import TodoModal from "./components/TodoModal";
 
 import { ThemeProvider } from "@coinbase/cds-web/system/ThemeProvider";
-import { coinbaseTheme } from "@coinbase/cds-web/themes/coinbaseTheme";
+import { defaultTheme } from "@coinbase/cds-web/themes/defaultTheme";
 
 const WrappedDemo = () => {
   const colorScheme = useAppSelector((state) => state.slice.theme);
   return (
-    <ThemeProvider activeColorScheme={colorScheme} theme={coinbaseTheme}>
+    <ThemeProvider activeColorScheme={colorScheme} theme={defaultTheme}>
       <HStack height="100vh" width="100%">
         <Sidebar />
         <VStack overflow="clip" width="100%">

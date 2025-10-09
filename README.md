@@ -100,7 +100,6 @@ The current web app (`Demo`) is a todo list application that showcases various C
 
 - **Components**: Use `@coinbase/cds-web` for web components
 - **Icons**: Import from `@coinbase/cds-icons`
-- **Fonts**: Already included via `@cbhq/cds-fonts`
 - **Themes**: Use `coinbaseTheme` or create custom themes
 - **Documentation**: Available in the main CDS repository
 

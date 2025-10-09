@@ -18,6 +18,8 @@
   "dependencies": {
     "@coinbase/cds-icons": "^5",
     "@coinbase/cds-illustrations": "^4",
+    "@coinbase/cds-lottie-files": "^3",
+    "@coinbase/cds-utils": "^2",
     "@coinbase/cds-web": "^8",
     "@coinbase/cds-web-visualization": "^3",
     "@reduxjs/toolkit": "^2.0.1",

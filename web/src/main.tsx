@@ -1,5 +1,5 @@
 import "@coinbase/cds-icons/fonts/web/icon-font.css";
-import "@cbhq/cds-fonts/fonts.css";
+import "@coinbase/cds-web/defaultFontStyles";
 
 import { createRoot } from "react-dom/client";
 import { App } from "./App";

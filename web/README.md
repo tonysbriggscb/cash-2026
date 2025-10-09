@@ -68,7 +68,6 @@ The current app (`Demo`) is a todo list application that showcases various CDS c
 
 - **Components**: Use `@coinbase/cds-web` for web components
 - **Icons**: Import from `@coinbase/cds-icons`
-- **Fonts**: Already included via `@cbhq/cds-fonts`
 - **Themes**: Use `coinbaseTheme` or create custom themes
 - **Documentation**: Available in the main CDS repository
 
