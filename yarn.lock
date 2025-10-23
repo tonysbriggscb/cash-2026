@@ -4355,6 +4355,7 @@ __metadata:
     "@babel/core": "npm:^7.26.0"
     "@coinbase/cds-icons": "npm:^5"
     "@coinbase/cds-illustrations": "npm:^4"
+    "@coinbase/cds-lottie-files": "npm:^3"
     "@coinbase/cds-mobile": "npm:^8"
     "@expo-google-fonts/inter": "npm:^0.4.2"
     "@expo-google-fonts/source-code-pro": "npm:^0.4.1"

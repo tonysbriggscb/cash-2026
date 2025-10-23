@@ -28,7 +28,8 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
     '@coinbase/cds-mobile',
     '@coinbase/cds-common', 
     '@coinbase/cds-icons',
-    '@coinbase/cds-illustrations'
+    '@coinbase/cds-illustrations',
+    '@coinbase/cds-lottie-files'
   ];
   
   for (const cdsPackage of cdsPackages) {

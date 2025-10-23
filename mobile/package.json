@@ -12,6 +12,7 @@
   "dependencies": {
     "@coinbase/cds-icons": "^5",
     "@coinbase/cds-illustrations": "^4",
+    "@coinbase/cds-lottie-files": "^3",
     "@coinbase/cds-mobile": "^8",
     "@expo-google-fonts/inter": "^0.4.2",
     "@expo-google-fonts/source-code-pro": "^0.4.1",
