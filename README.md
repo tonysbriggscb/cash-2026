@@ -1,145 +1,116 @@
-# CDS Playground
+# Test Kit
 
-A playground environment for building prototypes with Coinbase Design System (CDS) across web and mobile platforms.
+Build interactive CDS prototypes and test them with your users.
 
-<img src="cover.webp" alt="CDS Playground Cover" width="1200">
+---
 
-## 🏗️ Project Structure
+## What is Test Kit?
 
-This repository contains:
+Test Kit is a ready-to-use template for creating high-fidelity prototypes using the Coinbase Design System (CDS). It includes:
 
-- **`web/`** - React web application playground using CDS Web components (Yarn workspace)
-- **`mobile/`** - React Native/Expo mobile application playground with TypeScript (Standalone npm project)
+- **Realistic iPhone frame** with Dynamic Island and iOS status bar
+- **Interactive toolbar** for restarting, switching flows, and toggling dark mode
+- **Smooth screen transitions** that feel native
+- **Full CDS component library** — use the same components as production
 
-## 📋 Requirements
+No setup required. Just clone and start building.
 
-- **Node.js**: v18.x or v20.x LTS (Expo requirement)
-- **Yarn**: v4.x for web workspace
-- **npm**: For mobile app dependencies
+---
 
-## 🚀 Getting Started
+## Quick Start
 
-First, run the following
+### Option 1: Clone with Cursor (Recommended)
 
-```bash
-nvm install
-nvm use
-corepack enable
+1. Open Cursor
+2. Paste this command into Cursor chat or terminal:
+   ```
+   git clone https://github.cbhq.net/ben-webb/test-kit.git
+   ```
+3. Open the cloned folder in Cursor
+4. Ask Cursor: *"Run yarn dev to start the prototype"*
+5. View your prototype at `http://localhost:8081`
+
+### Option 2: Add to an existing prototype
+
+If you already have a CDS prototype:
+
+1. Open your project in Cursor
+2. Ask Cursor: *"Add the Test Kit wrapper from github.cbhq.net/ben-webb/test-kit"*
+3. Cursor will copy the necessary files and configure everything
+
+---
+
+## Building Your Prototype
+
+Your prototype screens live in:
+```
+web/src/prototype-example/screens/
 ```
 
-Then, run your platform specific commands:
+Each screen is a simple React component. Here's an example:
 
-### Web Playground
+```tsx
+import { VStack } from "@coinbase/cds-web/layout";
+import { Text } from "@coinbase/cds-web/typography/Text";
+import { Button } from "@coinbase/cds-web/buttons/Button";
 
-```bash
-yarn install
-yarn web:dev
+export const MyScreen = ({ onNavigate }) => {
+  return (
+    <VStack gap={3} padding={3}>
+      <Text font="title1">Hello!</Text>
+      <Text font="body" color="fgMuted">
+        This is my prototype screen.
+      </Text>
+      <Button onClick={() => onNavigate("next-screen")} block>
+        Continue
+      </Button>
+    </VStack>
+  );
+};
 ```
 
-Visit `http://localhost:8080` to see your web app.
+### Working with Cursor
 
-### Mobile Playground
+You don't need to write code yourself! Just describe what you want:
 
-```bash
-yarn mobile:install  # Install mobile dependencies
-yarn mobile:dev      # Start Expo development server
+- *"Create a new screen with a form that has email and password fields"*
+- *"Add a bottom sheet that slides up when I tap the button"*
+- *"Make the background blue and add a back button"*
+- *"Add a loading spinner while the data loads"*
+
+Cursor will write the code for you using CDS components.
+
+---
+
+## Helpful Commands
+
+Ask Cursor to run these for you:
+
+| Command | What it does |
+|---------|--------------|
+| `yarn dev` | Start the prototype locally |
+| `yarn build` | Build for production |
+
+---
+
+## Project Structure
+
+```
+test-kit/
+├── web/src/
+│   ├── proto-kit/           ← The Test Kit framework (don't edit)
+│   └── prototype-example/   ← Your prototype lives here
+│       ├── screens/         ← Add your screens here
+│       └── index.ts         ← Configure screens & navigation
 ```
 
-This will start the Expo development server. You can then:
+---
 
-- Press `i` to open iOS simulator
-- Press `a` to open Android emulator
-- Scan the QR code with Expo Go app on your device  (**note**: this is not currently working)
+## Need Help?
 
-## 📱 Web Demo App
+- **CDS Documentation**: [go/cds](https://go/cds)
+- **Questions**: Reach out in #design-systems on Slack
 
-The current web app (`Demo`) is a todo list application that showcases various CDS components. It includes:
-
-- Theme switching (light/dark)
-- Modal interactions
-- Layout components (HStack, VStack)
-
-## 🔧 Building Your Own Web Prototype
-
-**Super simple!** All the technical setup is handled automatically. Just focus on building with CDS:
-
-### Quick Start (Recommended)
-
-1. **Create your prototype component** (e.g., `web/src/MyPrototype.tsx`):
-
-   ```tsx
-   import { HStack, VStack } from "@coinbase/cds-web/layout";
-   import { Text, Heading } from "@coinbase/cds-web/typography";
-   import { Button } from "@coinbase/cds-web/forms";
-
-   export const MyPrototype = () => (
-     <VStack padding="large" gap="medium">
-       <Heading>My Custom Prototype</Heading>
-       <Text>Built with CDS components!</Text>
-       <Button>Click me</Button>
-     </VStack>
-   );
-   ```
-
-2. **Update the import in `web/src/App.tsx`** (just one line!):
-
-   ```tsx
-   // Replace this line:
-   import { Demo } from "./Demo";
-
-   // With this:
-   import { MyPrototype } from "./MyPrototype";
-
-   // And update the component in the JSX:
-   <MyPrototype />;
-   ```
-
-**That's it!** 🎉 All the technical setup (PortalProvider, ThemeProvider, global styles) is handled automatically.
-
-## 📚 CDS Resources
-
-- **Components**: Use `@coinbase/cds-web` for web components
-- **Icons**: Import from `@coinbase/cds-icons`
-- **Themes**: Use `coinbaseTheme` or create custom themes
-- **Documentation**: Available in the main CDS repository
-
-## 📝 Available Scripts
-
-### Web Scripts
-
-- `yarn web:dev` - Start web development server
-- `yarn web:build` - Build web app for production
-- `yarn web:start` - Start web production server
-- `yarn web:lint` - Lint web code
-- `yarn web:format` - Format web code
-- `yarn web:deploy:vercel` - Deploy to Vercel preview environment
-- `yarn web:deploy:vercel:prod` - Deploy to Vercel production environment
-
-### 🚀 Deploying to Vercel
-
-1. **Install Vercel CLI** (one-time setup)
-   ```bash
-   npm i -g vercel
-   ```
-
-2. **Link your Vercel account** (one-time setup)
-   ```bash
-   vercel login
-   vercel link
-   ```
-
-3. **Deploy**
-   - For preview deployment: `yarn web:deploy:vercel`
-   - For production deployment: `yarn web:deploy:vercel:prod`
-
-The preview deployment will give you a unique URL for testing, while the production deployment will update your main domain.
-
-### Mobile Scripts
-
-- `yarn mobile:dev` - Start Expo development server
-- `yarn mobile:start` - Start Expo development server
-- `yarn mobile:android` - Start on Android emulator
-- `yarn mobile:ios` - Start on iOS simulator
-- `yarn mobile:web` - Start mobile app in web browser
+---
 
 Happy prototyping! 🎯
