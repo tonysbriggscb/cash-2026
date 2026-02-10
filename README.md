@@ -36,7 +36,8 @@ If you already have a CDS prototype:
 
 1. Open your project in Cursor
 2. Ask Cursor: *"Add the Test Kit wrapper from github.cbhq.net/ben-webb/test-kit"*
-3. Cursor will copy the necessary files and configure everything
+
+Cursor will copy the proto-kit folder and configure it for you.
 
 ---
 
