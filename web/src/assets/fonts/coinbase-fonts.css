@@ -1,0 +1,81 @@
+/* Coinbase Sans */
+@font-face {
+  font-family: 'Coinbase Sans';
+  src: url('./CoinbaseSans-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Coinbase Sans';
+  src: url('./CoinbaseSans-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Coinbase Display */
+@font-face {
+  font-family: 'Coinbase Display';
+  src: url('./CoinbaseDisplay-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Coinbase Display';
+  src: url('./CoinbaseDisplay-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Coinbase Text */
+@font-face {
+  font-family: 'Coinbase Text';
+  src: url('./CoinbaseText-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Coinbase Text';
+  src: url('./CoinbaseText-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Coinbase Mono */
+@font-face {
+  font-family: 'Coinbase Mono';
+  src: url('./CoinbaseMono-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Coinbase Mono';
+  src: url('./CoinbaseMono-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Override CDS default font variables within the same layer */
+@layer cds {
+  :root {
+    --defaultFont-sans: 'Coinbase Sans', 'Coinbase Text', -apple-system, BlinkMacSystemFont, sans-serif;
+    --defaultFont-mono: 'Coinbase Mono', Menlo, Consolas, monospace;
+  }
+}
+
+/* Ensure base typography uses Coinbase fonts */
+html,
+body {
+  font-family: 'Coinbase Sans', 'Coinbase Text', -apple-system, BlinkMacSystemFont, sans-serif;
+}

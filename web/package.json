@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "start": "vite",
     "deploy:vercel": "vercel build && vercel deploy --prebuilt",
@@ -22,18 +22,15 @@
     "@coinbase/cds-utils": "^2",
     "@coinbase/cds-web": "^8",
     "@coinbase/cds-web-visualization": "^3",
-    "@reduxjs/toolkit": "^2.0.1",
     "framer-motion": "^10.18.0",
+    "lottie-react": "^2.4.1",
     "react": "^18",
-    "react-dom": "^18",
-    "react-redux": "^9.0.4",
-    "uuid": "^9.0.1"
+    "react-dom": "^18"
   },
   "devDependencies": {
     "@types/node": "^22",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
-    "@types/uuid": "^9",
     "@vitejs/plugin-react": "^5.0.0",
     "typescript": "~5.9.2",
     "vite": "^7.1.2"
