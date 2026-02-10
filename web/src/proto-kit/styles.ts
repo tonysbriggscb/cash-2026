@@ -130,6 +130,22 @@ export const protoKitStyles = `
     animation: protoKitTooltipEnter 0.15s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
 
+  /* Settings panel animation - starts at 0px from toolbar, ends 8px away */
+  @keyframes protoKitSettingsPanelEnter {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .proto-kit .settings-panel-animate {
+    animation: protoKitSettingsPanelEnter 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
   /* Tray/bottom sheet animations */
   @keyframes protoKitTraySlideUp {
     from {

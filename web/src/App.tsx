@@ -9,8 +9,8 @@
  * 3. Import and pass to ProtoKit below
  */
 
-import { useState } from "react";
-import { ProtoKit } from "./proto-kit";
+import { useState, useMemo } from "react";
+import { ProtoKit, parseSettingsFromUrl } from "./proto-kit";
 import { SplashScreen } from "./SplashScreen";
 import { 
   screens, 
@@ -23,8 +23,12 @@ import {
 import { FlowDemoScreen } from "./prototype-example/screens/FlowDemoScreen";
 
 export const App = () => {
-  const [showSplash, setShowSplash] = useState(true);
-  const [isEntering, setIsEntering] = useState(false);
+  // Parse URL settings once on mount
+  const urlSettings = useMemo(() => parseSettingsFromUrl(), []);
+  
+  // Skip splash if URL param says so
+  const [showSplash, setShowSplash] = useState(!urlSettings.skipSplash);
+  const [isEntering, setIsEntering] = useState(urlSettings.skipSplash);
 
   const handleSplashComplete = () => {
     setShowSplash(false);

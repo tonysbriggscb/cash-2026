@@ -6,6 +6,7 @@ import { SelectChip } from "@coinbase/cds-web/chips/SelectChip";
 import { SelectOption } from "@coinbase/cds-web/controls/SelectOption";
 import { Collapsible } from "@coinbase/cds-web/collapsible/Collapsible";
 import type { FlowConfig } from "./types";
+import { SettingsPanel } from "./SettingsPanel";
 
 interface PrototypeToolbarProps {
   /** Callback when restart button is clicked */
@@ -115,11 +116,14 @@ export const PrototypeToolbar = ({
   const [hoveredButton, setHoveredButton] = useState<TooltipType>(null);
   const [tooltipVisible, setTooltipVisible] = useState<TooltipType>(null);
   const [isRestartAnimating, setIsRestartAnimating] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [flowDropdownOpen, setFlowDropdownOpen] = useState(false);
   
   // Refs for button positions
   const toggleRef = useRef<HTMLDivElement>(null);
   const restartRef = useRef<HTMLDivElement>(null);
   const darkmodeRef = useRef<HTMLDivElement>(null);
+  const toolbarRef = useRef<HTMLDivElement>(null);
   
   const [tooltipPositions, setTooltipPositions] = useState<Record<TooltipType, TooltipPosition>>({
     toggle: { left: 0, top: 0, width: 0 },
@@ -171,28 +175,46 @@ export const PrototypeToolbar = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isExpanded]);
 
+  // Get settings panel position based on toolbar
+  const getSettingsPanelPosition = () => {
+    if (toolbarRef.current) {
+      const rect = toolbarRef.current.getBoundingClientRect();
+      return { top: rect.bottom + 8, left: rect.left };
+    }
+    return { top: 80, left: 32 };
+  };
+
   return (
     <>
-      {/* Tooltips rendered outside the toolbar */}
+      {/* Tooltips rendered outside the toolbar - hidden when settings panel or flow dropdown is open */}
       <Tooltip
         content="Hide"
         shortcut="ESC"
         position={tooltipPositions.toggle}
-        visible={tooltipVisible === "toggle" && isExpanded}
+        visible={tooltipVisible === "toggle" && isExpanded && !showSettings && !flowDropdownOpen}
       />
       <Tooltip
         content="Restart proto"
         shortcut="R"
         position={tooltipPositions.restart}
-        visible={tooltipVisible === "restart" && !isAtStart}
+        visible={tooltipVisible === "restart" && !isAtStart && !showSettings && !flowDropdownOpen}
       />
       <Tooltip
         content={isDarkMode ? "Light mode" : "Dark mode"}
         position={tooltipPositions.darkmode}
-        visible={tooltipVisible === "darkmode"}
+        visible={tooltipVisible === "darkmode" && !showSettings && !flowDropdownOpen}
+      />
+
+      {/* Settings panel rendered outside toolbar to avoid clipping */}
+      <SettingsPanel
+        visible={showSettings}
+        onClose={() => setShowSettings(false)}
+        position={getSettingsPanelPosition()}
+        currentFlow={currentFlow}
       />
 
       <div
+        ref={toolbarRef}
         className="toolbar-container"
         style={{
           position: "fixed",
@@ -230,7 +252,10 @@ export const PrototypeToolbar = ({
               compact
               transparent
               accessibilityLabel={isExpanded ? "Hide toolbar" : "Expand toolbar"}
-              onClick={() => setIsExpanded(!isExpanded)}
+              onClick={() => {
+                setFlowDropdownOpen(false);
+                setIsExpanded(!isExpanded);
+              }}
             />
           </div>
 
@@ -263,6 +288,7 @@ export const PrototypeToolbar = ({
                       isAtStart
                         ? undefined
                         : () => {
+                            setFlowDropdownOpen(false);
                             setIsRestartAnimating(true);
                             onRestart();
                           }
@@ -286,7 +312,25 @@ export const PrototypeToolbar = ({
                   accessibilityLabel={
                     isDarkMode ? "Switch to light mode" : "Switch to dark mode"
                   }
-                  onClick={onToggleDarkMode}
+                  onClick={() => {
+                    setFlowDropdownOpen(false);
+                    onToggleDarkMode();
+                  }}
+                />
+              </div>
+
+              {/* Settings button */}
+              <div style={{ position: "relative", display: "inline-flex" }}>
+                <IconButton
+                  name="filter"
+                  variant="secondary"
+                  compact
+                  transparent
+                  accessibilityLabel="Tester settings"
+                  onClick={() => {
+                    setFlowDropdownOpen(false);
+                    setShowSettings(!showSettings);
+                  }}
                 />
               </div>
 
@@ -295,6 +339,13 @@ export const PrototypeToolbar = ({
                 <SelectChip
                   value={currentFlow}
                   valueLabel={flows.find((f) => f.id === currentFlow)?.name}
+                  open={flowDropdownOpen}
+                  onOpenChange={(open) => {
+                    setFlowDropdownOpen(open);
+                    if (open) {
+                      setShowSettings(false);
+                    }
+                  }}
                   onChange={(newValue) => {
                     const flow = flows.find((f) => f.id === newValue);
                     if (flow && !flow.disabled) {
@@ -307,6 +358,7 @@ export const PrototypeToolbar = ({
                   height={40}
                   background="bgSecondary"
                   minWidth={120}
+                  styles={{ popover: { marginTop: 8 } }}
                   content={
                     <VStack>
                       {flows.map((flow) => (

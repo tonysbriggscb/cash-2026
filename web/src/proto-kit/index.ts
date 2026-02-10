@@ -43,6 +43,14 @@ export { WorkInProgressModal } from "./WorkInProgressModal";
 // Styles (for manual injection if needed)
 export { protoKitStyles } from "./styles";
 
+// Settings utilities
+export { 
+  parseSettingsFromUrl, 
+  generateTesterUrl, 
+  hasTestSettings,
+} from "./settings";
+export type { PrototypeSettings } from "./settings";
+
 // Types
 export type {
   ScreenConfig,

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { MediaQueryProvider } from "@coinbase/cds-web/system/MediaQueryProvider";
 import { PortalProvider } from "@coinbase/cds-web/overlays/PortalProvider";
 import { ThemeProvider } from "@coinbase/cds-web/system/ThemeProvider";
@@ -21,6 +21,7 @@ import { DeviceFrame, useViewport } from "./DeviceFrame";
 import { PrototypeToolbar } from "./PrototypeToolbar";
 import { useScreenNavigator, ScreenNavigator } from "./ScreenNavigator";
 import { WorkInProgressModal } from "./WorkInProgressModal";
+import { parseSettingsFromUrl } from "./settings";
 
 interface ProtoKitProps<TScreen extends string> extends ProtoKitConfig<TScreen> {
   /** Custom theme (defaults to CDS defaultTheme) */
@@ -82,7 +83,17 @@ function ProtoKitContent<TScreen extends string>({
   isEntering = true,
 }: ProtoKitConfig<TScreen> & { isDarkMode: boolean; onToggleDarkMode: () => void; isEntering?: boolean }) {
   const { isMobile, scale } = useViewport();
-  const [currentFlow, setCurrentFlow] = useState(flows[0]?.id ?? "main");
+  
+  // Parse URL settings for tester mode (do this first so we can use it for initial state)
+  const urlSettings = useMemo(() => parseSettingsFromUrl(), []);
+  
+  // Use flow from URL if specified, otherwise default to first flow
+  const [currentFlow, setCurrentFlow] = useState(() => {
+    if (urlSettings.flow && flows.some(f => f.id === urlSettings.flow)) {
+      return urlSettings.flow;
+    }
+    return flows[0]?.id ?? "main";
+  });
   const [workInProgressModalVisible, setWorkInProgressModalVisible] = useState(false);
   const [activeTray, setActiveTray] = useState<string | null>(null);
   const [showToast, setShowToast] = useState(false);
@@ -104,7 +115,12 @@ function ProtoKitContent<TScreen extends string>({
   });
 
   // Handler for elements that don't have interactions yet
-  const showWorkInProgress = () => setWorkInProgressModalVisible(true);
+  // Only show modal if modals are enabled in settings
+  const showWorkInProgress = () => {
+    if (urlSettings.showModals) {
+      setWorkInProgressModalVisible(true);
+    }
+  };
 
   // Handler for opening trays
   const openTray = (trayId: string) => setActiveTray(trayId);
@@ -334,16 +350,18 @@ function ProtoKitContent<TScreen extends string>({
     return (
       <>
         {toast}
-        <PrototypeToolbar
-          onRestart={restartPrototype}
-          currentFlow={currentFlow}
-          onFlowChange={setCurrentFlow}
-          isAtStart={true}
-          isDarkMode={isDarkMode}
-          onToggleDarkMode={onToggleDarkMode}
-          flows={flows.length > 0 ? flows : undefined}
-          entranceStyles={entranceStyles}
-        />
+        {urlSettings.showToolbar && (
+          <PrototypeToolbar
+            onRestart={restartPrototype}
+            currentFlow={currentFlow}
+            onFlowChange={setCurrentFlow}
+            isAtStart={true}
+            isDarkMode={isDarkMode}
+            onToggleDarkMode={onToggleDarkMode}
+            flows={flows.length > 0 ? flows : undefined}
+            entranceStyles={entranceStyles}
+          />
+        )}
         <div style={entranceStyles}>
           <DeviceFrame scale={scale}>{alternateContent}</DeviceFrame>
         </div>
@@ -465,16 +483,18 @@ function ProtoKitContent<TScreen extends string>({
   return (
     <>
       {toast}
-      <PrototypeToolbar
-        onRestart={restartPrototype}
-        currentFlow={currentFlow}
-        onFlowChange={setCurrentFlow}
-        isAtStart={isAtStart}
-        isDarkMode={isDarkMode}
-        onToggleDarkMode={onToggleDarkMode}
-        flows={flows.length > 0 ? flows : undefined}
-        entranceStyles={entranceStyles}
-      />
+      {urlSettings.showToolbar && (
+        <PrototypeToolbar
+          onRestart={restartPrototype}
+          currentFlow={currentFlow}
+          onFlowChange={setCurrentFlow}
+          isAtStart={isAtStart}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={onToggleDarkMode}
+          flows={flows.length > 0 ? flows : undefined}
+          entranceStyles={entranceStyles}
+        />
+      )}
       <div style={entranceStyles}>
         <DeviceFrame scale={scale}>{screenContent}</DeviceFrame>
       </div>
