@@ -1,0 +1,10 @@
+# Linguist overrides for GitHub language detection
+
+# Mark Yarn constraints file as not a programming language
+constraints.pro linguist-language=Text
+
+# Mark Yarn releases as vendored (excludes from language stats)
+.yarn/** linguist-vendored
+
+# Mark generated files
+*.json linguist-generated
