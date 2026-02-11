@@ -1,4 +1,5 @@
 import { RefObject } from "react";
+import { createPortal } from "react-dom";
 import { useTapHint } from "./useTapHint";
 
 interface TapHintProps {
@@ -8,34 +9,42 @@ interface TapHintProps {
 }
 
 /**
- * Renders a pulsing overlay over the correct target element
- * when the user clicks the wrong thing. Guides users to the intended action.
+ * Renders focus-ring style hints over ALL interactive elements on screen
+ * when the user clicks the wrong thing. Guides users to available actions.
+ *
+ * Uses a portal to render at document.body level, bypassing all
+ * overflow:hidden and CSS transform scaling issues.
  */
 export const TapHint = ({ active, containerRef, currentScreen }: TapHintProps) => {
-  const { hintRect, hintVisible, hintKey } = useTapHint({
+  const { hintRects, hintVisible, hintKey } = useTapHint({
     enabled: active,
     containerRef,
     currentScreen,
   });
 
-  if (!hintVisible || !hintRect) return null;
+  if (!active || !hintVisible || hintRects.length === 0) return null;
 
-  return (
-    <div
-      key={hintKey}
-      className="tap-hint-overlay"
-      style={{
-        position: "absolute",
-        top: hintRect.top,
-        left: hintRect.left,
-        width: hintRect.width,
-        height: hintRect.height,
-        borderRadius: hintRect.height / 2,
-        background: "rgba(0, 0, 0, 0.25)",
-        filter: "blur(6px)",
-        pointerEvents: "none",
-        zIndex: 50,
-      }}
-    />
+  return createPortal(
+    <>
+      {hintRects.map((rect, i) => (
+        <div
+          key={`${hintKey}-${i}`}
+          style={{
+            position: "fixed",
+            top: rect.top,
+            left: rect.left,
+            width: rect.width,
+            height: rect.height,
+            borderRadius: rect.height / 2,
+            boxShadow: "0 0 0 2px #8A85FF",
+            background: "transparent",
+            pointerEvents: "none",
+            zIndex: 99999,
+            animation: "protoKitHintPulse 1.5s ease forwards",
+          }}
+        />
+      ))}
+    </>,
+    document.body
   );
 };

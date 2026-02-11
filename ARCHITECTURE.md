@@ -131,24 +131,28 @@ Notes stack vertically when created; when the viewport bottom is reached they wr
 
 ### 6. Tap Hint Guide
 
-An optional overlay that guides users to the correct interactive element when they click the wrong thing. When triggered, a blurred, semi-transparent black circle pulses over the target element and then fades out.
+An optional overlay that guides users to interactive elements when they click the wrong thing. When triggered, a 2px purple focus-ring (`box-shadow`) appears around ALL interactive elements currently in view, then fades out after 1.5 seconds.
 
 **How it works:**
-1. User clicks anywhere inside the screen content that isn't the target element
-2. The hook finds the correct target: first by looking for a `data-hint` attribute, then by auto-detecting the last visible `<button>` inside the active `.screen`
-3. A pulsing overlay appears over the target for 1.5 seconds
+1. User clicks anywhere inside the screen/header that isn't an interactive element
+2. The hook discovers all interactive targets: `data-hint` elements (explicit), buttons, `[role="button"]`, `[data-clickable]`, anchors, and divs/spans with React `onClick` handlers
+3. Focus-ring overlays appear on every found target simultaneously for 1.5 seconds
 
 **Enabling tap hints:**
 - Via URL: `?hints=on`
 - Via the "Tap hints" toggle in the settings panel (activates immediately)
 
 **Targeting priority:**
-1. Elements with `data-hint` attribute (explicit)
-2. Last visible, non-disabled `<button>` inside the current `.screen` (auto-detected)
+1. Elements with `data-hint` attribute (explicit, takes precedence over auto-detection)
+2. Auto-detected: `button:not(:disabled)`, `[role="button"]`, `[data-clickable]`, `a[href]`, divs/spans with React `onClick`
+
+**Implementation notes:**
+- Uses `createPortal` to render hints to `document.body` with `position: fixed`, bypassing `overflow: hidden` and CSS transform scaling on the device frame
+- Works across all flows (main and alternate) via separate `TapHint` instances with their own container refs
 
 **Key files:**
-- `TapHint.tsx` — Renders the overlay div with blur and pulse animation
-- `useTapHint.ts` — Click listener, target resolution (`findHintTarget`), visibility checks (`isVisible`)
+- `TapHint.tsx` — Renders focus-ring overlays via a portal to `document.body`
+- `useTapHint.ts` — Click listener, multi-target resolution (`findAllHintTargets`), visibility checks (`isVisible`, `hasClickHandler`)
 
 ### 7. Tester Settings
 

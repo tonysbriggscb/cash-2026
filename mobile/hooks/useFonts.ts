@@ -1,32 +1,26 @@
-import { Inter_400Regular } from '@expo-google-fonts/inter/400Regular';
-import { Inter_600SemiBold } from '@expo-google-fonts/inter/600SemiBold';
-import { useFonts as useFontsInter } from '@expo-google-fonts/inter/useFonts';
-import { SourceCodePro_400Regular } from '@expo-google-fonts/source-code-pro/400Regular';
-import { SourceCodePro_600SemiBold } from '@expo-google-fonts/source-code-pro/600SemiBold';
-import { useFonts as useFontsSourceCodePro } from '@expo-google-fonts/source-code-pro/useFonts';
 import { useFonts as useFontsExpo } from 'expo-font';
 
 const localFonts = {
   CoinbaseIcons: require('@coinbase/cds-icons/esm/fonts/native/CoinbaseIcons.ttf'),
 };
 
-const interFonts = {
-  Inter_400Regular,
-  Inter_600SemiBold,
-};
-
-const sourceCodeProFonts = {
-  SourceCodePro_400Regular,
-  SourceCodePro_600SemiBold,
+const coinbaseFonts = {
+  'CoinbaseSans-Regular': require('../assets/fonts/CoinbaseSans-Regular.otf'),
+  'CoinbaseSans-Medium': require('../assets/fonts/CoinbaseSans-Medium.otf'),
+  'CoinbaseDisplay-Regular': require('../assets/fonts/CoinbaseDisplay-Regular.otf'),
+  'CoinbaseDisplay-Medium': require('../assets/fonts/CoinbaseDisplay-Medium.otf'),
+  'CoinbaseMono-Regular': require('../assets/fonts/CoinbaseMono-Regular.otf'),
+  'CoinbaseMono-Medium': require('../assets/fonts/CoinbaseMono-Medium.otf'),
+  'CoinbaseText-Regular': require('../assets/fonts/CoinbaseText-Regular.otf'),
+  'CoinbaseText-Medium': require('../assets/fonts/CoinbaseText-Medium.otf'),
 };
 
 export function useFonts() {
   const [loadedLocal, errorLocal] = useFontsExpo(localFonts);
-  const [loadedInter, errorInter] = useFontsInter(interFonts);
-  const [loadedSourceCodePro, errorSourceCodePro] = useFontsSourceCodePro(sourceCodeProFonts);
+  const [loadedCoinbase, errorCoinbase] = useFontsExpo(coinbaseFonts);
 
   return [
-    loadedLocal && loadedInter && loadedSourceCodePro,
-    errorLocal || errorInter || errorSourceCodePro,
+    loadedLocal && loadedCoinbase,
+    errorLocal || errorCoinbase,
   ];
 }

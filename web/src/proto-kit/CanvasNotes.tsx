@@ -41,6 +41,7 @@ const StickyNote = ({
     if (note.text === "") {
       setIsEditing(true);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleMouseDown = useCallback(

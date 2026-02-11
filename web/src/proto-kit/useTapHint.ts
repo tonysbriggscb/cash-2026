@@ -21,13 +21,11 @@ function isVisible(el: HTMLElement): boolean {
   if (rect.width === 0 || rect.height === 0) return false;
   const style = window.getComputedStyle(el);
   if (style.opacity === "0" || style.visibility === "hidden" || style.display === "none") return false;
-  // Walk up to check if any ancestor hides it
   let parent = el.parentElement;
   while (parent) {
     const ps = window.getComputedStyle(parent);
     if (ps.opacity === "0" || ps.visibility === "hidden" || ps.display === "none") return false;
     if (ps.pointerEvents === "none" && parent !== el) {
-      // Check if this is the invisible header wrapper
       const pr = parent.getBoundingClientRect();
       if (pr.height > 0) return false;
     }
@@ -37,46 +35,84 @@ function isVisible(el: HTMLElement): boolean {
 }
 
 /**
- * Resolves the hint target element inside the container.
- * Priority: visible [data-hint] element, then the last visible button
- * in the active screen (typically the primary CTA at the bottom).
+ * Checks if an element has a click handler (React or native).
  */
-function findHintTarget(container: HTMLElement): HTMLElement | null {
-  // Explicit data-hint takes priority
-  const explicitTargets = container.querySelectorAll<HTMLElement>("[data-hint]");
-  for (const el of explicitTargets) {
-    if (isVisible(el)) return el;
-  }
-
-  // Find buttons inside the .screen elements (skip header area)
-  const screenEls = container.querySelectorAll<HTMLElement>(".screen");
-  for (const screen of screenEls) {
-    const buttons = screen.querySelectorAll<HTMLElement>("button:not(:disabled)");
-    // Return the last visible button -- typically the primary CTA at the bottom
-    let lastVisible: HTMLElement | null = null;
-    for (const btn of buttons) {
-      if (isVisible(btn)) lastVisible = btn;
+function hasClickHandler(el: HTMLElement): boolean {
+  if (el.onclick) return true;
+  const keys = Object.keys(el);
+  for (const key of keys) {
+    if (key.startsWith("__reactProps") || key.startsWith("__reactFiber")) {
+      const props = (el as Record<string, unknown>)[key] as Record<string, unknown> | undefined;
+      if (props && typeof props.onClick === "function") return true;
     }
-    if (lastVisible) return lastVisible;
   }
-
-  return null;
+  return false;
 }
 
 /**
- * Hook that shows a pulsing hint overlay over the correct target element
- * when the user clicks something else on the screen.
+ * Finds ALL interactive elements (buttons, clickable elements) inside the
+ * container including the header and screen content.
+ */
+function findAllHintTargets(container: HTMLElement): HTMLElement[] {
+  // Explicit data-hint elements take priority
+  const explicitTargets = container.querySelectorAll<HTMLElement>("[data-hint]");
+  const explicitVisible: HTMLElement[] = [];
+  for (const el of explicitTargets) {
+    if (isVisible(el)) explicitVisible.push(el);
+  }
+  if (explicitVisible.length > 0) return explicitVisible;
+
+  // Search the entire container for interactive elements (header + screens)
+  const seen = new Set<HTMLElement>();
+  const interactiveElements: HTMLElement[] = [];
+
+  const addIfNew = (el: HTMLElement) => {
+    if (!seen.has(el) && isVisible(el)) {
+      seen.add(el);
+      interactiveElements.push(el);
+    }
+  };
+
+  // All buttons (including header icon buttons and screen CTAs)
+  const buttons = container.querySelectorAll<HTMLElement>("button:not(:disabled)");
+  for (const btn of buttons) addIfNew(btn);
+
+  // Elements with role="button" or data-clickable
+  const clickables = container.querySelectorAll<HTMLElement>("[role='button'], [data-clickable]");
+  for (const el of clickables) addIfNew(el);
+
+  // Anchors with href
+  const links = container.querySelectorAll<HTMLElement>("a[href]");
+  for (const el of links) addIfNew(el);
+
+  // Divs/spans with React onClick handlers
+  const allElements = container.querySelectorAll<HTMLElement>("div, span");
+  for (const el of allElements) {
+    if (!seen.has(el) && isVisible(el) && hasClickHandler(el)) {
+      // Skip if a child is already in the list (prefer the most specific element)
+      const hasChildInList = interactiveElements.some(existing => el.contains(existing));
+      if (!hasChildInList) {
+        addIfNew(el);
+      }
+    }
+  }
+
+  return interactiveElements;
+}
+
+/**
+ * Hook that shows pulsing hint overlays over ALL interactive elements
+ * when the user clicks somewhere that isn't one of them.
  */
 export function useTapHint({ enabled, containerRef, currentScreen }: UseTapHintOptions) {
-  const [hintRect, setHintRect] = useState<HintRect | null>(null);
+  const [hintRects, setHintRects] = useState<HintRect[]>([]);
   const [hintVisible, setHintVisible] = useState(false);
-  // Incrementing key forces the CSS animation to replay on each trigger
   const [hintKey, setHintKey] = useState(0);
 
-  // Reset hint when the screen changes
+  // Reset hints when the screen changes
   useEffect(() => {
     setHintVisible(false);
-    setHintRect(null);
+    setHintRects([]);
   }, [currentScreen]);
 
   // Auto-hide after 1.5s
@@ -93,22 +129,27 @@ export function useTapHint({ enabled, containerRef, currentScreen }: UseTapHintO
       const container = containerRef.current;
       if (!container) return;
 
-      const target = findHintTarget(container);
-      if (!target) return;
+      const targets = findAllHintTargets(container);
+      if (targets.length === 0) return;
 
+      // Check if the user clicked on any of the interactive elements
       const clickedEl = e.target as HTMLElement;
-      if (target.contains(clickedEl)) return;
+      const clickedOnTarget = targets.some(t => t.contains(clickedEl));
+      if (clickedOnTarget) return;
 
-      const containerRect = container.getBoundingClientRect();
-      const targetRect = target.getBoundingClientRect();
-
-      const padding = 8;
-      setHintRect({
-        top: targetRect.top - containerRect.top - padding,
-        left: targetRect.left - containerRect.left - padding,
-        width: targetRect.width + padding * 2,
-        height: targetRect.height + padding * 2,
+      // Show hints on ALL interactive elements
+      const padding = 4;
+      const rects = targets.map(target => {
+        const rect = target.getBoundingClientRect();
+        return {
+          top: rect.top - padding,
+          left: rect.left - padding,
+          width: rect.width + padding * 2,
+          height: rect.height + padding * 2,
+        };
       });
+
+      setHintRects(rects);
       setHintKey((k) => k + 1);
       setHintVisible(true);
     },
@@ -126,5 +167,5 @@ export function useTapHint({ enabled, containerRef, currentScreen }: UseTapHintO
     };
   }, [enabled, handleClick, containerRef]);
 
-  return { hintRect, hintVisible, hintKey };
+  return { hintRects, hintVisible, hintKey };
 }

@@ -69,6 +69,8 @@ export const SettingsPanel = ({ visible, onClose, position, currentFlow, hintsEn
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    }).catch(() => {
+      // Fallback: silently fail if clipboard is unavailable
     });
   }, [showToolbar, showModals, skipSplash, hintsEnabled, currentFlow]);
 
@@ -102,8 +104,6 @@ export const SettingsPanel = ({ visible, onClose, position, currentFlow, hintsEn
   if (!visible) return null;
 
   return (
-    <>
-      {/* Panel */}
       <div
         ref={panelRef}
         className="settings-panel-animate"
@@ -162,6 +162,5 @@ export const SettingsPanel = ({ visible, onClose, position, currentFlow, hintsEn
           </Button>
         </VStack>
       </div>
-    </>
   );
 };

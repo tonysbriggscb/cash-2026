@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { MediaQueryProvider } from "@coinbase/cds-web/system/MediaQueryProvider";
 import { PortalProvider } from "@coinbase/cds-web/overlays/PortalProvider";
 import { ThemeProvider } from "@coinbase/cds-web/system/ThemeProvider";
@@ -96,6 +96,7 @@ function ProtoKitContent<TScreen extends string>({
   // Tap hint overlay for guiding users to the correct button
   const [showHints, setShowHints] = useState(() => urlSettings.showHints);
   const screenContentRef = useRef<HTMLDivElement>(null);
+  const alternateContentRef = useRef<HTMLDivElement>(null);
   
   // Use flow from URL if specified, otherwise default to first flow
   const [currentFlow, setCurrentFlow] = useState(() => {
@@ -137,13 +138,13 @@ function ProtoKitContent<TScreen extends string>({
   const closeTray = () => setActiveTray(null);
 
   // Handler for restarting prototype
-  const restartPrototype = () => {
+  const restartPrototype = useCallback(() => {
     restart();
     setActiveTray(null);
     setWorkInProgressModalVisible(false);
     setToastHiding(false);
     setShowToast(true);
-  };
+  }, [restart]);
 
   // Keyboard shortcuts: R to restart, N to add permanent note, Shift+N to add screen-scoped note
   useEffect(() => {
@@ -163,7 +164,7 @@ function ProtoKitContent<TScreen extends string>({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isAtStart, isMobile, addNote, setScopeForNote, currentScreen]);
+  }, [isAtStart, isMobile, addNote, setScopeForNote, currentScreen, restartPrototype]);
 
   // Auto-hide toast
   useEffect(() => {
@@ -269,6 +270,7 @@ function ProtoKitContent<TScreen extends string>({
   if (isAlternateFlow && renderAlternateFlow) {
     const alternateContent = (
       <div
+        ref={alternateContentRef}
         style={{
           height: "100%",
           display: "flex",
@@ -314,6 +316,13 @@ function ProtoKitContent<TScreen extends string>({
             {renderAlternateFlow(currentFlow, switchToMainFlow)}
           </div>
         </div>
+
+        {/* Tap hint overlay for alternate flow */}
+        <TapHint
+          active={showHints}
+          containerRef={alternateContentRef}
+          currentScreen={currentFlow}
+        />
       </div>
     );
 

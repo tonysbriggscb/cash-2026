@@ -12,6 +12,13 @@ export const protoKitStyles = `
     scrollbar-width: none;
   }
 
+  /* Disable text selection in prototype screens */
+  .proto-kit .screen-container,
+  .proto-kit .screen-container * {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
   /* Screen transition container */
   .proto-kit .screen-container {
     position: relative;
@@ -236,35 +243,23 @@ export const protoKitStyles = `
     transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Tap hint pulse animation */
+  /* Tap hint focus-ring animation (global keyframes for fixed-position elements) */
   @keyframes protoKitHintPulse {
     0% {
       opacity: 0;
-      transform: scale(0.85);
+      transform: scale(0.92);
     }
     15% {
       opacity: 1;
-      transform: scale(1.05);
-    }
-    30% {
-      transform: scale(0.95);
-    }
-    45% {
-      transform: scale(1.03);
-    }
-    60% {
       transform: scale(1);
     }
     85% {
       opacity: 1;
+      transform: scale(1);
     }
     100% {
       opacity: 0;
-      transform: scale(1);
+      transform: scale(0.96);
     }
-  }
-
-  .proto-kit .tap-hint-overlay {
-    animation: protoKitHintPulse 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
 `;

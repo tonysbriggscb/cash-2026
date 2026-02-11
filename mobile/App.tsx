@@ -1,16 +1,16 @@
 import React, { memo, useState } from 'react';
 import { Platform } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import type { ColorScheme } from '@coinbase/cds-common/core/theme';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { PortalProvider } from '@coinbase/cds-mobile/overlays/PortalProvider';
 import { StatusBar } from '@coinbase/cds-mobile/system/StatusBar';
 import { ThemeProvider } from '@coinbase/cds-mobile/system/ThemeProvider';
-import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
+import { coinbaseTheme } from '@coinbase/cds-mobile/themes/coinbaseTheme';
 import * as SplashScreen from 'expo-splash-screen';
 
 import { useFonts } from './hooks/useFonts';
-import { Demo } from './Demo';
+import { BlankScreen } from './BlankScreen';
 
 // This code allows the use of toLocaleString() on Android
 if (Platform.OS === 'android') {
@@ -20,7 +20,11 @@ if (Platform.OS === 'android') {
 
 const CdsSafeAreaProvider: React.FC<React.PropsWithChildren<unknown>> = memo(({ children }) => {
   const theme = useTheme();
-  return <SafeAreaProvider style={{ backgroundColor: theme.color.bg }}>{children}</SafeAreaProvider>;
+  return (
+    <SafeAreaProvider style={{ flex: 1, backgroundColor: theme.color.bg }}>
+      {children}
+    </SafeAreaProvider>
+  );
 });
 
 const App = memo(() => {
@@ -38,11 +42,11 @@ const App = memo(() => {
   }
 
   return (
-    <ThemeProvider activeColorScheme={colorScheme} theme={defaultTheme}>
+    <ThemeProvider activeColorScheme={colorScheme} theme={coinbaseTheme}>
       <CdsSafeAreaProvider>
         <PortalProvider>
           <StatusBar />
-          <Demo />
+          <BlankScreen />
         </PortalProvider>
       </CdsSafeAreaProvider>
     </ThemeProvider>
