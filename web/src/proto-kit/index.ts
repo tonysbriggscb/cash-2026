@@ -39,6 +39,10 @@ export { DeviceFrame, useViewport } from "./DeviceFrame";
 export { PrototypeToolbar } from "./PrototypeToolbar";
 export { ScreenNavigator, useScreenNavigator } from "./ScreenNavigator";
 export { WorkInProgressModal } from "./WorkInProgressModal";
+export { CanvasNotes } from "./CanvasNotes";
+export { useCanvasNotes } from "./useCanvasNotes";
+export { TapHint } from "./TapHint";
+export { useTapHint } from "./useTapHint";
 
 // Styles (for manual injection if needed)
 export { protoKitStyles } from "./styles";
@@ -62,6 +66,7 @@ export type {
   TrayConfig,
   TrayProps,
   ProtoKitConfig,
+  CanvasNote,
 } from "./types";
 
 // Constants

@@ -22,9 +22,13 @@ test-kit/
 │       │   ├── ProtoKit.tsx      # Main wrapper component
 │       │   ├── DeviceFrame.tsx   # iPhone frame + responsive scaling
 │       │   ├── IOSStatusBar.tsx  # Fake iOS status bar
-│       │   ├── PrototypeToolbar.tsx  # Floating toolbar (restart, dark mode, flows, settings)
+│       │   ├── PrototypeToolbar.tsx  # Floating toolbar (restart, dark mode, flows, settings, notes)
 │       │   ├── ScreenNavigator.tsx   # Screen transitions + navigation hook
-│       │   ├── SettingsPanel.tsx     # Tester settings dropdown
+│       │   ├── SettingsPanel.tsx     # Tester settings dropdown (includes tap hints toggle)
+│       │   ├── CanvasNotes.tsx       # Draggable sticky notes on the canvas
+│       │   ├── useCanvasNotes.ts     # Note state management + URL persistence
+│       │   ├── TapHint.tsx           # Pulsing overlay guiding users to the correct button
+│       │   ├── useTapHint.ts         # Tap hint target detection + click handling
 │       │   ├── WorkInProgressModal.tsx # "Still working on it" modal
 │       │   ├── settings.ts       # URL parameter utilities
 │       │   ├── styles.ts         # CSS animations (keyframes)
@@ -102,7 +106,51 @@ const flows: FlowConfig[] = [
 
 The toolbar dropdown lets users switch flows. Non-main flows render via `renderAlternateFlow` prop.
 
-### 5. Tester Settings
+### 5. Canvas Notes
+
+Designers can annotate their prototypes with draggable sticky notes on the canvas (the area around the device frame). Notes are persisted via a base64-encoded `?notes=` URL parameter so they survive page reloads and can be shared.
+
+Each note has a **scope**:
+
+| Scope | Behavior |
+|-------|----------|
+| **Permanent** (default) | Visible on every screen |
+| **Screen** | Only visible when the pinned screen is active |
+
+Scope is toggled via a badge on the note header. The badge shows "All" for permanent notes or the screen name for screen-scoped notes.
+
+**Keyboard shortcuts:**
+- `N` — Add a new permanent note
+- `Shift+N` — Add a new screen-scoped note (pinned to the current screen)
+
+Notes stack vertically when created; when the viewport bottom is reached they wrap to the next column. The toolbar also has an "Add note" button (compose icon).
+
+**Key files:**
+- `CanvasNotes.tsx` — Renders the note layer and individual `StickyNote` components (drag, edit, delete, scope toggle)
+- `useCanvasNotes.ts` — State management, non-overlapping positioning (`findOpenPosition`), URL encode/decode
+
+### 6. Tap Hint Guide
+
+An optional overlay that guides users to the correct interactive element when they click the wrong thing. When triggered, a blurred, semi-transparent black circle pulses over the target element and then fades out.
+
+**How it works:**
+1. User clicks anywhere inside the screen content that isn't the target element
+2. The hook finds the correct target: first by looking for a `data-hint` attribute, then by auto-detecting the last visible `<button>` inside the active `.screen`
+3. A pulsing overlay appears over the target for 1.5 seconds
+
+**Enabling tap hints:**
+- Via URL: `?hints=on`
+- Via the "Tap hints" toggle in the settings panel (activates immediately)
+
+**Targeting priority:**
+1. Elements with `data-hint` attribute (explicit)
+2. Last visible, non-disabled `<button>` inside the current `.screen` (auto-detected)
+
+**Key files:**
+- `TapHint.tsx` — Renders the overlay div with blur and pulse animation
+- `useTapHint.ts` — Click listener, target resolution (`findHintTarget`), visibility checks (`isVisible`)
+
+### 7. Tester Settings
 
 The settings panel generates shareable URLs with configurations:
 
@@ -112,8 +160,11 @@ The settings panel generates shareable URLs with configurations:
 | Disable modals | `?modals=disabled` | Disables "work in progress" modal |
 | Skip splash | `?splash=skip` | Skips the Lottie animation |
 | Start on flow | `?flow=alternate` | Opens on a specific flow |
+| Tap hints | `?hints=on` | Enables tap hint guide overlay |
 
-Example tester URL: `https://cds-test-kit.vercel.app?toolbar=hidden&splash=skip&flow=main`
+Notes are persisted separately via `?notes=<base64>` (managed automatically by `useCanvasNotes`).
+
+Example tester URL: `https://cds-test-kit.vercel.app?toolbar=hidden&splash=skip&flow=main&hints=on`
 
 ## Key Components
 
@@ -124,13 +175,17 @@ The main wrapper that orchestrates everything:
 - Renders device frame (desktop) or fullscreen (mobile)
 - Handles screen navigation via `useScreenNavigator` hook
 - Shows/hides toolbar based on settings
+- Manages canvas notes via `useCanvasNotes` hook
+- Manages tap hint state (`showHints`) and provides `screenContentRef` to `TapHint`
+- Handles keyboard shortcuts (`N` for notes, `Shift+N` for screen-scoped notes)
 
 ### PrototypeToolbar.tsx
 Floating toolbar with:
 - Expand/collapse toggle
 - Restart prototype button
 - Dark/light mode toggle
-- Settings panel (filter icon)
+- Add note button (compose icon)
+- Settings panel (filter icon) — includes live tap hints toggle
 - Flow dropdown (when multiple flows exist)
 
 State interactions:
@@ -138,6 +193,18 @@ State interactions:
 - Opening flow dropdown closes settings
 - Clicking any button closes both dropdowns
 - Tooltips hidden when any dropdown is open
+
+### CanvasNotes.tsx
+Renders draggable sticky notes on the canvas around the device frame:
+- Each `StickyNote` supports drag-to-move, inline text editing, delete, and scope toggling
+- `CanvasNotes` filters notes by the current screen (permanent notes always shown, screen-scoped notes only on their pinned screen)
+- Notes have a colored header: yellow for permanent, blue for screen-scoped
+
+### TapHint.tsx
+Renders a blurred, semi-transparent pulsing circle over the target element:
+- Uses `useTapHint` hook for target detection and positioning
+- `key` prop set to `hintKey` to force remount and re-trigger the CSS animation on each "wrong" click
+- Positioned absolutely within the screen content container
 
 ### ScreenNavigator.tsx
 Provides the `useScreenNavigator` hook:
@@ -192,6 +259,9 @@ Animations are defined in `styles.ts` as CSS keyframes injected via `<style>` ta
 | Tooltip | `.toolbar-tooltip-animate` | Fade + scale |
 | Settings panel | `.settings-panel-animate` | Slide down 8px |
 | Restart icon | `.restart-icon-animate` | Rotate -360deg |
+| Note appear | `.canvas-note` | Scale + fade in on creation |
+| Note fade | `.canvas-note-wrapper` | Opacity transition for screen-scoped notes |
+| Tap hint pulse | `.tap-hint-overlay` | Scale + fade pulse (1.5s) over target element |
 
 Motion curve: `cubic-bezier(0.4, 0, 0.2, 1)` (CDS expressive)
 
@@ -199,11 +269,13 @@ Motion curve: `cubic-bezier(0.4, 0, 0.2, 1)` (CDS expressive)
 
 No external state library. Component state via `useState`:
 
-| Component | Key State |
-|-----------|-----------|
-| `ProtoKit` | `currentFlow`, `isDarkMode`, `workInProgressModalVisible` |
+| Component / Hook | Key State |
+|------------------|-----------|
+| `ProtoKit` | `currentFlow`, `isDarkMode`, `workInProgressModalVisible`, `showHints` |
 | `PrototypeToolbar` | `isExpanded`, `showSettings`, `flowDropdownOpen`, `tooltipVisible` |
 | `ScreenNavigator` | `currentScreen`, `displayedScreen`, `animationPhase` |
+| `useCanvasNotes` | `notes` (array of `CanvasNote`), synced to `?notes=` URL param |
+| `useTapHint` | `hintRect`, `hintVisible`, `hintKey` (incremented to re-trigger animation) |
 
 ## Common Modifications
 
@@ -247,8 +319,11 @@ No external state library. Component state via `useState`:
 ## Important Notes for AI
 
 1. **CDS components have specific APIs** - Check imports, many components have `font`, `color`, `styles` props
-2. **z-index hierarchy**: Toolbar (9999) < Backdrop (10000) < Settings panel (10001)
+2. **z-index hierarchy**: Toolbar (9999) < Backdrop (10000) < Settings panel (10001) < Tap hint (50, within screen content)
 3. **Fixed positioning** for tooltips and settings panel to avoid clipping by parent overflow
 4. **URL settings** parsed once on mount with `useMemo`
 5. **Animation timing** - Most use 0.2-0.3s with CDS expressive curve
 6. **Mobile detection** - `useViewport` hook detects mobile and skips device frame
+7. **Canvas notes** are persisted via base64-encoded `?notes=` URL param; use `useCanvasNotes` hook for all note operations
+8. **Tap hint re-animation** - The `hintKey` state is incremented on each trigger and used as a React `key` to force remount and restart the CSS animation
+9. **Tap hint targeting** - `data-hint` attribute takes priority; fallback auto-detects the last visible button in the `.screen` container using the `isVisible` helper

@@ -25,9 +25,15 @@ interface PrototypeToolbarProps {
   flows?: FlowConfig[];
   /** Entrance animation styles */
   entranceStyles?: React.CSSProperties;
+  /** Callback when add note button is clicked */
+  onAddNote?: () => void;
+  /** Whether tap hints are currently enabled */
+  hintsEnabled?: boolean;
+  /** Callback to toggle tap hints */
+  onToggleHints?: () => void;
 }
 
-type TooltipType = "toggle" | "restart" | "darkmode" | null;
+type TooltipType = "toggle" | "restart" | "darkmode" | "addnote" | null;
 
 interface TooltipPosition {
   left: number;
@@ -110,6 +116,9 @@ export const PrototypeToolbar = ({
   onToggleDarkMode,
   flows = [{ id: "main", name: "Main flow", disabled: false }],
   entranceStyles,
+  onAddNote,
+  hintsEnabled,
+  onToggleHints,
 }: PrototypeToolbarProps) => {
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -123,12 +132,14 @@ export const PrototypeToolbar = ({
   const toggleRef = useRef<HTMLDivElement>(null);
   const restartRef = useRef<HTMLDivElement>(null);
   const darkmodeRef = useRef<HTMLDivElement>(null);
+  const addnoteRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
   
   const [tooltipPositions, setTooltipPositions] = useState<Record<TooltipType, TooltipPosition>>({
     toggle: { left: 0, top: 0, width: 0 },
     restart: { left: 0, top: 0, width: 0 },
     darkmode: { left: 0, top: 0, width: 0 },
+    addnote: { left: 0, top: 0, width: 0 },
     null: { left: 0, top: 0, width: 0 },
   });
 
@@ -138,7 +149,8 @@ export const PrototypeToolbar = ({
       const ref = 
         hoveredButton === "toggle" ? toggleRef :
         hoveredButton === "restart" ? restartRef :
-        hoveredButton === "darkmode" ? darkmodeRef : null;
+        hoveredButton === "darkmode" ? darkmodeRef :
+        hoveredButton === "addnote" ? addnoteRef : null;
       
       if (ref?.current) {
         const rect = ref.current.getBoundingClientRect();
@@ -204,6 +216,14 @@ export const PrototypeToolbar = ({
         position={tooltipPositions.darkmode}
         visible={tooltipVisible === "darkmode" && !showSettings && !flowDropdownOpen}
       />
+      {onAddNote && (
+        <Tooltip
+          content="Add note (Shift+N for screen only)"
+          shortcut="N"
+          position={tooltipPositions.addnote}
+          visible={tooltipVisible === "addnote" && !showSettings && !flowDropdownOpen}
+        />
+      )}
 
       {/* Settings panel rendered outside toolbar to avoid clipping */}
       <SettingsPanel
@@ -211,6 +231,8 @@ export const PrototypeToolbar = ({
         onClose={() => setShowSettings(false)}
         position={getSettingsPanelPosition()}
         currentFlow={currentFlow}
+        hintsEnabled={hintsEnabled}
+        onToggleHints={onToggleHints}
       />
 
       <div
@@ -333,6 +355,29 @@ export const PrototypeToolbar = ({
                   }}
                 />
               </div>
+
+              {/* Add note button */}
+              {onAddNote && (
+                <div
+                  ref={addnoteRef}
+                  style={{ position: "relative", display: "inline-flex" }}
+                  onMouseEnter={() => setHoveredButton("addnote")}
+                  onMouseLeave={() => setHoveredButton(null)}
+                >
+                  <IconButton
+                    name="compose"
+                    variant="secondary"
+                    compact
+                    transparent
+                    accessibilityLabel="Add note"
+                    onClick={() => {
+                      setFlowDropdownOpen(false);
+                      setShowSettings(false);
+                      onAddNote();
+                    }}
+                  />
+                </div>
+              )}
 
               {/* Flows SelectChip */}
               {flows.length > 1 && (

@@ -214,4 +214,57 @@ export const protoKitStyles = `
   .proto-kit .circle-bg-animate {
     animation: protoKitCircleScaleUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
+
+  /* Canvas sticky note animations */
+  @keyframes protoKitNoteAppear {
+    from {
+      opacity: 0;
+      transform: scale(0.9) translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .proto-kit .canvas-note {
+    animation: protoKitNoteAppear 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  /* Fade wrapper for notes appearing/disappearing on screen change */
+  .proto-kit .canvas-note-wrapper {
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Tap hint pulse animation */
+  @keyframes protoKitHintPulse {
+    0% {
+      opacity: 0;
+      transform: scale(0.85);
+    }
+    15% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+    30% {
+      transform: scale(0.95);
+    }
+    45% {
+      transform: scale(1.03);
+    }
+    60% {
+      transform: scale(1);
+    }
+    85% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
+
+  .proto-kit .tap-hint-overlay {
+    animation: protoKitHintPulse 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
 `;

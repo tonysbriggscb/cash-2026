@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { MediaQueryProvider } from "@coinbase/cds-web/system/MediaQueryProvider";
 import { PortalProvider } from "@coinbase/cds-web/overlays/PortalProvider";
 import { ThemeProvider } from "@coinbase/cds-web/system/ThemeProvider";
@@ -21,6 +21,9 @@ import { DeviceFrame, useViewport } from "./DeviceFrame";
 import { PrototypeToolbar } from "./PrototypeToolbar";
 import { useScreenNavigator, ScreenNavigator } from "./ScreenNavigator";
 import { WorkInProgressModal } from "./WorkInProgressModal";
+import { CanvasNotes } from "./CanvasNotes";
+import { useCanvasNotes } from "./useCanvasNotes";
+import { TapHint } from "./TapHint";
 import { parseSettingsFromUrl } from "./settings";
 
 interface ProtoKitProps<TScreen extends string> extends ProtoKitConfig<TScreen> {
@@ -86,6 +89,13 @@ function ProtoKitContent<TScreen extends string>({
   
   // Parse URL settings for tester mode (do this first so we can use it for initial state)
   const urlSettings = useMemo(() => parseSettingsFromUrl(), []);
+
+  // Canvas notes for designer annotations (desktop only)
+  const { notes, addNote, updateNote, removeNote, moveNote, setScopeForNote } = useCanvasNotes();
+
+  // Tap hint overlay for guiding users to the correct button
+  const [showHints, setShowHints] = useState(() => urlSettings.showHints);
+  const screenContentRef = useRef<HTMLDivElement>(null);
   
   // Use flow from URL if specified, otherwise default to first flow
   const [currentFlow, setCurrentFlow] = useState(() => {
@@ -135,16 +145,25 @@ function ProtoKitContent<TScreen extends string>({
     setShowToast(true);
   };
 
-  // Restart on 'R' key press
+  // Keyboard shortcuts: R to restart, N to add permanent note, Shift+N to add screen-scoped note
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+
       if ((e.key === "r" || e.key === "R") && !isAtStart) {
         restartPrototype();
+      }
+      if ((e.key === "n" || e.key === "N") && !isMobile) {
+        const noteId = addNote(currentScreen);
+        if (e.shiftKey && noteId) {
+          setScopeForNote(noteId, "screen", currentScreen);
+        }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isAtStart]);
+  }, [isAtStart, isMobile, addNote, setScopeForNote, currentScreen]);
 
   // Auto-hide toast
   useEffect(() => {
@@ -360,8 +379,19 @@ function ProtoKitContent<TScreen extends string>({
             onToggleDarkMode={onToggleDarkMode}
             flows={flows.length > 0 ? flows : undefined}
             entranceStyles={entranceStyles}
+            onAddNote={() => addNote(currentFlow)}
+            hintsEnabled={showHints}
+            onToggleHints={() => setShowHints((prev) => !prev)}
           />
         )}
+        <CanvasNotes
+          notes={notes}
+          currentScreen={currentFlow}
+          onUpdate={updateNote}
+          onRemove={removeNote}
+          onMove={moveNote}
+          onSetScope={setScopeForNote}
+        />
         <div style={entranceStyles}>
           <DeviceFrame scale={scale}>{alternateContent}</DeviceFrame>
         </div>
@@ -372,6 +402,7 @@ function ProtoKitContent<TScreen extends string>({
   // Screen content
   const screenContent = (
     <div
+      ref={screenContentRef}
       style={{
         height: "100%",
         display: "flex",
@@ -406,6 +437,13 @@ function ProtoKitContent<TScreen extends string>({
         navigate={navigate}
         onShowWorkInProgress={showWorkInProgress}
         onOpenTray={openTray}
+      />
+
+      {/* Tap hint overlay */}
+      <TapHint
+        active={showHints}
+        containerRef={screenContentRef}
+        currentScreen={currentScreen}
       />
 
       {/* Render active tray */}
@@ -493,8 +531,19 @@ function ProtoKitContent<TScreen extends string>({
           onToggleDarkMode={onToggleDarkMode}
           flows={flows.length > 0 ? flows : undefined}
           entranceStyles={entranceStyles}
+          onAddNote={() => addNote(currentScreen)}
+          hintsEnabled={showHints}
+          onToggleHints={() => setShowHints((prev) => !prev)}
         />
       )}
+      <CanvasNotes
+        notes={notes}
+        currentScreen={currentScreen}
+        onUpdate={updateNote}
+        onRemove={removeNote}
+        onMove={moveNote}
+        onSetScope={setScopeForNote}
+      />
       <div style={entranceStyles}>
         <DeviceFrame scale={scale}>{screenContent}</DeviceFrame>
       </div>

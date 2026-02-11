@@ -87,6 +87,20 @@ export interface ProtoKitConfig<TScreen extends string = string> {
 }
 
 /**
+ * Canvas note for designer annotations on the desktop canvas
+ */
+export interface CanvasNote {
+  id: string;
+  text: string;
+  x: number;
+  y: number;
+  /** "permanent" notes are visible on all screens; "screen" notes only on the pinned screen */
+  scope: "permanent" | "screen";
+  /** Screen ID this note is pinned to (only used when scope is "screen") */
+  screen?: string;
+}
+
+/**
  * Device dimensions
  */
 export const DEVICE_WIDTH = 375;

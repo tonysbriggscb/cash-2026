@@ -12,6 +12,10 @@ interface SettingsPanelProps {
   position?: { top: number; left: number };
   /** Current flow ID to include in tester URL */
   currentFlow?: string;
+  /** Whether tap hints are currently enabled (live state) */
+  hintsEnabled?: boolean;
+  /** Callback to toggle tap hints on/off */
+  onToggleHints?: () => void;
 }
 
 /**
@@ -46,7 +50,7 @@ const SettingRow = ({
 /**
  * Settings panel for configuring tester URL options
  */
-export const SettingsPanel = ({ visible, onClose, position, currentFlow }: SettingsPanelProps) => {
+export const SettingsPanel = ({ visible, onClose, position, currentFlow, hintsEnabled = false, onToggleHints }: SettingsPanelProps) => {
   const [showToolbar, setShowToolbar] = useState(false);
   const [showModals, setShowModals] = useState(false);
   const [skipSplash, setSkipSplash] = useState(true);
@@ -58,6 +62,7 @@ export const SettingsPanel = ({ visible, onClose, position, currentFlow }: Setti
       showToolbar,
       showModals,
       skipSplash,
+      showHints: hintsEnabled,
       flow: currentFlow,
     });
     
@@ -65,7 +70,7 @@ export const SettingsPanel = ({ visible, onClose, position, currentFlow }: Setti
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
-  }, [showToolbar, showModals, skipSplash, currentFlow]);
+  }, [showToolbar, showModals, skipSplash, hintsEnabled, currentFlow]);
 
   // Click outside detection
   useEffect(() => {
@@ -138,6 +143,11 @@ export const SettingsPanel = ({ visible, onClose, position, currentFlow }: Setti
             label="Skip splash screen"
             checked={skipSplash}
             onChange={() => setSkipSplash(!skipSplash)}
+          />
+          <SettingRow
+            label="Tap hints"
+            checked={hintsEnabled}
+            onChange={() => onToggleHints?.()}
           />
         </VStack>
 

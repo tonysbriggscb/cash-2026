@@ -9,6 +9,8 @@ export interface PrototypeSettings {
   showModals: boolean;
   /** Whether to skip the splash screen */
   skipSplash: boolean;
+  /** Whether to show tap hint overlays when clicking the wrong element */
+  showHints: boolean;
   /** Which flow to start on */
   flow?: string;
 }
@@ -20,6 +22,7 @@ export const defaultSettings: PrototypeSettings = {
   showToolbar: true,
   showModals: true,
   skipSplash: false,
+  showHints: false,
 };
 
 /**
@@ -37,6 +40,7 @@ export function parseSettingsFromUrl(): PrototypeSettings {
     showToolbar: isTestMode ? false : params.get("toolbar") !== "hidden",
     showModals: isTestMode ? false : params.get("modals") !== "disabled",
     skipSplash: isTestMode ? true : params.get("splash") === "skip",
+    showHints: params.get("hints") === "on",
     flow: params.get("flow") || undefined,
   };
 }
@@ -59,8 +63,18 @@ export function generateTesterUrl(settings: Partial<PrototypeSettings>): string 
   if (settings.skipSplash === true) {
     url.searchParams.set("splash", "skip");
   }
+  if (settings.showHints === true) {
+    url.searchParams.set("hints", "on");
+  }
   if (settings.flow && settings.flow !== "main") {
     url.searchParams.set("flow", settings.flow);
+  }
+
+  // Preserve canvas notes if present in the current URL
+  const currentParams = new URLSearchParams(window.location.search);
+  const notes = currentParams.get("notes");
+  if (notes) {
+    url.searchParams.set("notes", notes);
   }
   
   return url.toString();
