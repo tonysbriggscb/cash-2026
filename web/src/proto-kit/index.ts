@@ -43,6 +43,10 @@ export { CanvasNotes } from "./CanvasNotes";
 export { useCanvasNotes } from "./useCanvasNotes";
 export { TapHint } from "./TapHint";
 export { useTapHint } from "./useTapHint";
+export {
+  PrototypeMediaCard,
+  type PrototypeMediaCardItem,
+} from "./PrototypeMediaCard";
 
 // Styles (for manual injection if needed)
 export { protoKitStyles } from "./styles";
@@ -66,6 +70,7 @@ export type {
   TrayConfig,
   TrayProps,
   ProtoKitConfig,
+  BottomTabConfig,
   CanvasNote,
 } from "./types";
 

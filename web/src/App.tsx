@@ -12,16 +12,22 @@
 import { useState, useMemo } from "react";
 import { ProtoKit, parseSettingsFromUrl } from "./proto-kit";
 import { SplashScreen } from "./SplashScreen";
-import { 
-  screens, 
-  screenOrder, 
-  initialScreen, 
+import {
+  screens,
+  screenOrder,
+  initialScreen,
+  initialHistory,
   totalSteps,
   getStepForScreen,
   flows,
+  bottomTabBar,
+  trays,
 } from "./prototype-example";
+import { defaultRewardsData } from "./prototype-example/screens/cash/data";
+import { RewardsTickerProvider } from "./prototype-example/screens/cash/RewardsTickerContext";
 import { FlowDemoScreen } from "./prototype-example/screens/FlowDemoScreen";
-
+import { RegionProvider } from "./prototype-example/RegionContext";
+import { RegionSwitcher } from "./prototype-example/RegionSwitcher";
 export const App = () => {
   // Parse URL settings once on mount
   const urlSettings = useMemo(() => parseSettingsFromUrl(), []);
@@ -41,18 +47,26 @@ export const App = () => {
       {showSplash && (
         <SplashScreen onComplete={handleSplashComplete} />
       )}
+      <RegionProvider>
+      <RewardsTickerProvider initialUnits={defaultRewardsData.startUnits}>
       <ProtoKit
         screens={screens}
         screenOrder={screenOrder}
         initialScreen={initialScreen}
+        initialHistory={initialHistory}
         totalSteps={totalSteps}
         getStepForScreen={getStepForScreen}
         flows={flows}
+        bottomTabBar={bottomTabBar}
+        trays={trays}
         isEntering={isEntering}
         renderAlternateFlow={(flowId, onSwitchToMain) => (
           <FlowDemoScreen onSwitchToMain={onSwitchToMain} />
         )}
+        renderToolbarExtra={() => <RegionSwitcher />}
       />
+      </RewardsTickerProvider>
+      </RegionProvider>
     </div>
   );
 };

@@ -1,0 +1,38 @@
+---
+description: All subdetail and description text must use label2 typography (CDS).
+globs: "**/screens/**/*.tsx,**/prototype-example/**/*.tsx"
+alwaysApply: false
+---
+
+# Label2 for subdetail and descriptions
+
+All **subdetail** and **description** text in list cells, section headers, and similar UI MUST use the **label2** font.
+
+## Scope
+
+- **Description**: Secondary or supporting copy (e.g. ListCell `description`, `descriptionNode`).
+- **Subdetail**: Extra detail line (e.g. ListCell `subdetail`, `subdetailNode`).
+
+## Implementation
+
+- Use CDS `Text` with `font="label2"` for description and subdetail content.
+- When passing a string to `description` or `subdetail`, the component may apply its own font; prefer `descriptionNode` / `subdetailNode` with explicit `<Text font="label2">` when you need to guarantee label2.
+- Do not use `font="body"`, `font="label1"`, or other fonts for description or subdetail unless a design exception is documented.
+
+## Examples
+
+```tsx
+// ✅ GOOD — description and subdetail use label2
+<ListCell
+  title="Bitcoin"
+  description={<Text as="span" font="label2" color="fgMuted">BTC</Text>}
+  subdetailNode={
+    <Text font="label2" display="block" textAlign="end" color="fgPositive">
+      ↗ £3.12 (0.35%)
+    </Text>
+  }
+/>
+
+// ❌ BAD — description uses body or default
+<ListCell description={<Text font="body">BTC</Text>} />
+```

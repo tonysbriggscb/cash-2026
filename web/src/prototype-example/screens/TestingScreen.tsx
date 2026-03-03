@@ -3,7 +3,7 @@ import { Text } from "@coinbase/cds-web/typography/Text";
 import { Button } from "@coinbase/cds-web/buttons/Button";
 import type { ScreenProps } from "../../proto-kit";
 
-type ExampleScreen = "welcome" | "features" | "howto" | "testing" | "complete";
+type ExampleScreen = "welcome" | "features" | "howto" | "testing" | "complete" | "cash";
 
 const StepItem = ({ 
   number,
@@ -46,7 +46,7 @@ export const TestingScreen = ({
           root: {
             flex: 1,
             overflow: "auto",
-            WebkitOverflowScrolling: "touch",
+            overscrollBehavior: "none",
             paddingBottom: 80,
           },
         }}

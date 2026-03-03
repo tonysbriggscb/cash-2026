@@ -162,7 +162,7 @@ const StickyNote = ({
             cursor: "pointer",
             padding: "2px 6px",
             fontSize: 10,
-            fontWeight: 600,
+            fontWeight: 500,
             fontFamily:
               '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
             color: "rgba(0,0,0,0.55)",

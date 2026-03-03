@@ -1,0 +1,44 @@
+---
+description: Padding and spacing rules for cash screen sections so new sections match existing ones.
+globs: "**/screens/cash/*.tsx,**/prototype-example/screens/**/*.tsx"
+alwaysApply: false
+---
+
+# Cash Screen Section Padding and Spacing
+
+When creating or editing sections on the cash screen (or similar multi-section prototype screens), follow these spacing rules so new sections stay consistent with OverviewSection, RewardsSection, AutomationsSection, and TransactionsSection.
+
+## Section root
+
+- Every section MUST have **16px top and bottom padding** on its root container.
+- Use a root `VStack` with `style={{ paddingTop: 16, paddingBottom: 16 }}` and `gap={0}` (unless you intentionally want gap between header and content at the root level).
+
+## Section header
+
+- Use `SectionHeader` with `paddingX={3}`.
+- Do NOT set `paddingY={0}` on the section header. Keep the default vertical padding so the header matches the visual size of other section headers (e.g. Cash Rewards vs Automations/Transactions).
+
+## Header to content
+
+- When the section is "header + single content block," rely on the SectionHeader's default bottom padding. Do not add extra `marginTop` on the content unless the design has multiple distinct blocks.
+- When the section has **multiple distinct blocks** (e.g. Overview: title+balance, progress bar, breakdown list), use **16px** between blocks: apply `style={{ marginTop: 16 }}` on the wrapper of the second block and on the wrapper of the third block.
+
+## Between blocks within a section
+
+- Use **16px** vertical spacing between major blocks (e.g. between progress bar and breakdown list).
+- Apply via `style={{ marginTop: 16 }}` on the block wrapper. Do not rely on a single `gap` on the parent that might use theme units and produce inconsistent pixel spacing.
+
+## List cells
+
+- Global styles in `web/src/proto-kit/styles.ts` already set list cells to 8px top/bottom padding and 48px min-height.
+- New sections that use `ListCell` do not need to override these unless they require a special case (e.g. overview breakdown uses tighter overrides).
+
+## Accordions / subsections
+
+- When content should sit flush with the next subsection (e.g. "History" directly under the Open orders accordion), use **0** top margin on that next subsection: e.g. `marginTop: 0` on the heading or wrapper.
+
+## Reference implementations
+
+- **Simple section (header + list):** `web/src/prototype-example/screens/cash/RewardsSection.tsx`, `AutomationsSection.tsx` — root VStack with `paddingTop: 16`, `paddingBottom: 16`; SectionHeader with `paddingX={3}` and default paddingY; no extra margin on list.
+- **Multi-block section:** `web/src/prototype-example/screens/cash/OverviewSection.tsx` — root wrapper with 16px padding; 16px between header and progress bar (wrapper `marginTop: 16`); 16px between progress bar and breakdown block (`marginTop: 16` on breakdown wrapper).
+- **Section with accordion:** `web/src/prototype-example/screens/cash/TransactionsSection.tsx` — same section padding; "History" heading with `marginTop: 0` so there is no gap below the accordion.

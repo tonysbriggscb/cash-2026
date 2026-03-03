@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Lottie from "lottie-react";
 import splashAnimation from "./assets/splash-animation.json";
 
@@ -6,18 +6,33 @@ interface SplashScreenProps {
   onComplete: () => void;
 }
 
+// Maximum time (ms) to wait for the Lottie animation before force-completing.
+const SPLASH_TIMEOUT_MS = 4000;
+
 /**
  * Splash screen with Lottie animation
- * Displays once when the app loads, then fades out to reveal the gray background
+ * Displays once when the app loads, then fades out to reveal the gray background.
+ * A safety timeout ensures the prototype is never permanently blocked if the
+ * animation fails to fire onComplete (e.g. after a dev-server restart).
  */
 export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const completedRef = useRef(false);
 
-  const handleAnimationComplete = () => {
+  const complete = () => {
+    if (completedRef.current) return;
+    completedRef.current = true;
     setIsFadingOut(true);
-    // Wait for fade out, then signal complete
     setTimeout(onComplete, 400);
   };
+
+  // Safety net: force-complete if animation never fires onComplete
+  useEffect(() => {
+    const id = setTimeout(complete, SPLASH_TIMEOUT_MS);
+    return () => clearTimeout(id);
+  }, []);
+
+  const handleAnimationComplete = () => complete();
 
   return (
     <div

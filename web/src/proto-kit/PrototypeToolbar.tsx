@@ -31,6 +31,8 @@ interface PrototypeToolbarProps {
   hintsEnabled?: boolean;
   /** Callback to toggle tap hints */
   onToggleHints?: () => void;
+  /** Optional extra content (e.g. region switcher) rendered after flow selector */
+  extraContent?: React.ReactNode;
 }
 
 type TooltipType = "toggle" | "restart" | "darkmode" | "addnote" | null;
@@ -119,6 +121,7 @@ export const PrototypeToolbar = ({
   onAddNote,
   hintsEnabled,
   onToggleHints,
+  extraContent,
 }: PrototypeToolbarProps) => {
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -419,6 +422,8 @@ export const PrototypeToolbar = ({
                   }
                 />
               )}
+
+              {extraContent}
             </HStack>
           </Collapsible>
         </div>

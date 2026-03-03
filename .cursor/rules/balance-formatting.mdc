@@ -1,0 +1,25 @@
+---
+description: All balance and currency amounts must display with exactly 2 decimal places (e.g. 10,000.00).
+globs: "**/screens/cash/*.tsx,**/screens/cash/*.ts,**/prototype-example/screens/**/*.tsx"
+alwaysApply: false
+---
+
+# Balance and currency formatting
+
+All balance and currency amounts in the cash screen (and related prototype screens) MUST be displayed with exactly **2 decimal places**.
+
+## Format
+
+- Use the pattern: `£10,000.00` (thousands separator, 2 decimal places).
+- For locale-aware formatting, use `toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 })` and prefix with the currency symbol.
+
+## Implementation
+
+- Use the shared `formatBalance(amount: number)` from `web/src/prototype-example/screens/cash/shared.tsx` when rendering a balance from a number. It returns e.g. `£15,100.00`.
+- When balance values are defined in data (e.g. in `data.ts`), write the `formatted` string with 2 decimal places: e.g. `"£10,000.00"`, not `"£10,000"`.
+- Exception: the Cash Rewards ticker is an animated counter with many decimal places by design; other monetary balances still follow the 2-decimal rule.
+
+## Examples
+
+- Correct: `£10,000.00`, `£5,000.00`, `£100.00`, `+£120.00`, `-£50.00`
+- Incorrect: `£10,000`, `£5,000`, `£100`

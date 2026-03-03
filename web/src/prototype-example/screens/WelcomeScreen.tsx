@@ -4,7 +4,7 @@ import { Button } from "@coinbase/cds-web/buttons/Button";
 import { LogoMark } from "@coinbase/cds-web/icons/LogoMark";
 import type { ScreenProps } from "../../proto-kit";
 
-type ExampleScreen = "welcome" | "features" | "howto" | "testing" | "complete";
+type ExampleScreen = "welcome" | "features" | "howto" | "testing" | "complete" | "cash";
 
 /**
  * Welcome screen - First screen of the example prototype

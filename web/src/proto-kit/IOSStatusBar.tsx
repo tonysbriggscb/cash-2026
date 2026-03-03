@@ -60,7 +60,7 @@ export const IOSStatusBar = ({
           alignItems: "center",
           fontFamily: "'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif",
           fontSize: 16,
-          fontWeight: 600,
+          fontWeight: 500,
           color: statusBarColor,
           letterSpacing: -0.32,
         }}

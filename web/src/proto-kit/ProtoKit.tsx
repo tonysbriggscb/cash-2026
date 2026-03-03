@@ -13,7 +13,10 @@ import type {
   HeaderConfig, 
   FlowConfig,
   TrayProps,
+  BottomTabConfig,
 } from "./types";
+import { Icon } from "@coinbase/cds-web/icons/Icon";
+import { Text } from "@coinbase/cds-web/typography/Text";
 import { DEVICE_WIDTH, DEVICE_HEIGHT } from "./types";
 import { protoKitStyles } from "./styles";
 import { IOSStatusBar } from "./IOSStatusBar";
@@ -31,6 +34,119 @@ interface ProtoKitProps<TScreen extends string> extends ProtoKitConfig<TScreen> 
   theme?: typeof defaultTheme;
   /** Whether the kit is entering (for entrance animation) */
   isEntering?: boolean;
+}
+
+/**
+ * Fixed bottom tab bar matching the CDS mobile TabNavigation visual design.
+ * Uses CDS Icon and Text primitives so icon rendering and theming are consistent.
+ */
+/** Resolved left/right button config used for display and comparison */
+function BottomTabBar<TScreen extends string>({
+  tabs,
+  activeTabId,
+  showActionButtons,
+  onNavigate,
+}: {
+  tabs: BottomTabConfig<TScreen>[];
+  activeTabId: string;
+  showActionButtons: boolean;
+  onNavigate: (screen: TScreen, tabId: string) => void;
+}) {
+  return (
+    <div className="proto-kit-bottom-tab-bar" style={{ flexShrink: 0 }}>
+      {/* Tab icons row + home indicator — solid bg so scroll content doesn't bleed through */}
+      <div
+        style={{
+          backgroundColor: "var(--color-bg)",
+          borderTop: "1px solid",
+          // Hide the divider when CTAs are up — the gradient inside the screen slot
+          // acts as the visual separator. Show it when CTAs are hidden (scrolled away).
+          borderTopColor: showActionButtons ? "transparent" : "var(--color-bgLine)",
+          transition: "border-top-color 0.2s ease-in-out",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            paddingTop: 16,
+            paddingBottom: 8,
+            paddingLeft: 16,
+            paddingRight: 16,
+          }}
+        >
+          {tabs.map((tab) => {
+            const actionable = tab.actionable !== false;
+            const isActive = actionable && tab.id === activeTabId;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={actionable ? () => onNavigate(tab.screen, tab.id) : undefined}
+                aria-current={isActive ? "page" : undefined}
+                aria-label={tab.label}
+                aria-disabled={!actionable}
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  minWidth: 0,
+                  background: "none",
+                  border: "none",
+                  cursor: actionable ? "pointer" : "default",
+                  paddingTop: 0,
+                  paddingBottom: 4,
+                  paddingLeft: 0,
+                  paddingRight: 0,
+                  gap: 4,
+                  ...(!actionable && { pointerEvents: "none" }),
+                }}
+              >
+                <Icon
+                  name={tab.icon as any}
+                  size="m"
+                  active={isActive}
+                  color={isActive ? "fgPrimary" : "fg"}
+                />
+                <span
+                  style={{
+                    fontSize: 9,
+                    fontWeight: 500,
+                    lineHeight: 1,
+                    color: isActive ? "var(--color-fgPrimary)" : "var(--color-fg)",
+                  }}
+                >
+                  {tab.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* iPhone home indicator — 16px padding between tabs and pill, 8px below pill */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "flex-start",
+          paddingTop: 16,
+          paddingBottom: 8,
+          backgroundColor: "var(--color-bg)",
+        }}
+      >
+        <div
+          style={{
+            width: 134,
+            height: 5,
+            borderRadius: 3,
+            backgroundColor: "var(--color-fg)",
+          }}
+        />
+      </div>
+    </div>
+  );
 }
 
 /**
@@ -77,10 +193,14 @@ function ProtoKitContent<TScreen extends string>({
   initialScreen,
   flows = [],
   trays = [],
+  bottomTabBar,
   totalSteps = 0,
   getStepForScreen,
   renderHeader: customRenderHeader,
   renderAlternateFlow,
+  renderToolbarExtra,
+  renderDepositLabel,
+  initialHistory,
   isDarkMode,
   onToggleDarkMode,
   isEntering = true,
@@ -95,6 +215,11 @@ function ProtoKitContent<TScreen extends string>({
 
   // Tap hint overlay for guiding users to the correct button
   const [showHints, setShowHints] = useState(() => urlSettings.showHints);
+  // Track the active tab independently — defaults to first tab so it starts highlighted
+  const [activeTabId, setActiveTabId] = useState(() => bottomTabBar?.tabs[0]?.id ?? "");
+  // Action buttons above the tab bar — hide on scroll down, show on scroll up
+  const [showActionButtons, setShowActionButtons] = useState(true);
+  const lastScrollTopRef = useRef(0);
   const screenContentRef = useRef<HTMLDivElement>(null);
   const alternateContentRef = useRef<HTMLDivElement>(null);
   
@@ -116,13 +241,15 @@ function ProtoKitContent<TScreen extends string>({
     animationPhase,
     direction,
     navigate,
+    goBack,
+    canGoBack,
     restart,
     isAtStart,
-    getTransform,
   } = useScreenNavigator({
     screens,
     screenOrder,
     initialScreen,
+    initialHistory,
   });
 
   // Handler for elements that don't have interactions yet
@@ -166,6 +293,56 @@ function ProtoKitContent<TScreen extends string>({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isAtStart, isMobile, addNote, setScopeForNote, currentScreen, restartPrototype]);
 
+  // Scroll direction detection — hide action buttons on scroll down, show on scroll up.
+  // Button position is controlled via --cta-ty CSS custom property (direct DOM update)
+  // rather than React state, so scroll events don't cause ScreenNavigator re-renders
+  // that would interrupt in-flight CSS transitions.
+  useEffect(() => {
+    const handleScroll = (e: Event) => {
+      const target = e.target as HTMLElement;
+      const currentTop = target.scrollTop ?? 0;
+      const delta = currentTop - lastScrollTopRef.current;
+
+      // Always show CTAs when the user is within 30px of the bottom — they
+      // can't scroll further so the buttons should re-appear automatically.
+      const distanceFromBottom = target.scrollHeight - target.clientHeight - currentTop;
+      const nearBottom = distanceFromBottom <= 30;
+
+      if (nearBottom || delta < -4) {
+        setShowActionButtons(true);
+        screenContentRef.current?.style.setProperty("--cta-ty", "0px");
+      } else if (delta > 4) {
+        setShowActionButtons(false);
+        screenContentRef.current?.style.setProperty("--cta-ty", "60px");
+      }
+      lastScrollTopRef.current = currentTop;
+    };
+
+    const el = screenContentRef.current;
+    if (el) {
+      // capture:true catches scroll events from any scrollable descendant
+      el.addEventListener("scroll", handleScroll, { capture: true });
+      return () => el.removeEventListener("scroll", handleScroll, { capture: true });
+    }
+  }, []);
+
+  // Reset CTA button position and scroll tracking at the start of each navigation.
+  // We avoid setting React state here (only do direct DOM updates) so this effect
+  // doesn't trigger a ProtoKitContent re-render while ScreenNavigator is also
+  // setting up its slot transforms — keeping the two operations in separate
+  // render/commit cycles prevents the layout recalculation from competing with
+  // the CSS transition setup.
+  useEffect(() => {
+    if (animationPhase === "start") {
+      screenContentRef.current?.style.setProperty("--cta-ty", "0px");
+      lastScrollTopRef.current = 0;
+    } else if (animationPhase === "idle") {
+      // After the animation lands, snap the border state back to "buttons visible"
+      // without interfering with the in-flight CSS transition.
+      setShowActionButtons(true);
+    }
+  }, [animationPhase]);
+
   // Auto-hide toast
   useEffect(() => {
     if (showToast && !toastHiding) {
@@ -193,16 +370,135 @@ function ProtoKitContent<TScreen extends string>({
     return screenOrder.indexOf(screen);
   };
 
+  // Render CTA action buttons inside each screen slot so they slide with the transition.
+  //
+  // Intentionally does NOT capture showActionButtons from React state — button visibility
+  // is driven by the CSS custom property --cta-ty set directly on the scroll container,
+  // so scroll events never cause ScreenNavigator to re-render (which would interrupt
+  // in-flight CSS transitions).
+  const renderCTA = useCallback((screen: TScreen) => {
+    if (!bottomTabBar || bottomTabBar.tabs.length === 0) return null;
+    if (screens[screen]?.hideTabBar) return null;
+
+    // Screen-level config takes priority; fall back to the matching tab's config
+    // (e.g. the "home" tab owns "Transfer / Buy & sell" but the screen itself has none).
+    let actionButtons = screens[screen]?.actionButtons;
+    if (!actionButtons) {
+      const tab = bottomTabBar.tabs.find(
+        (t) => (t.screen as string) === (screen as string)
+      );
+      actionButtons = tab?.actionButtons;
+    }
+    if (!actionButtons) return null;
+
+    const leftBtn = actionButtons.left ?? { label: "Withdraw", trayId: "withdraw" };
+    const rightBtn = actionButtons.right ?? { label: null as string | null };
+    const depositLabelNode = renderDepositLabel?.();
+    const rightLabel: React.ReactNode = rightBtn.label ?? depositLabelNode ?? "Deposit";
+
+    return (
+      <div
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: 104,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          overflow: "hidden",
+          pointerEvents: "none",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: `linear-gradient(to bottom, rgba(255,255,255,0) 0%, var(--color-bg) 82.692%)`,
+            pointerEvents: "none",
+            transform: "translateY(var(--cta-ty, 0px))",
+            transition: "transform 0.3s ease 0ms",
+          }}
+        />
+        <div
+          style={{
+            position: "relative",
+            zIndex: 1,
+            display: "flex",
+            gap: 8,
+            paddingLeft: 16,
+            paddingRight: 16,
+            pointerEvents: "auto",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => leftBtn.trayId ? openTray(leftBtn.trayId) : undefined}
+            style={{
+              flex: 1,
+              height: 36,
+              borderRadius: 100,
+              border: "none",
+              cursor: "pointer",
+              backgroundColor: "rgb(var(--blue5))",
+              color: "var(--color-fgPrimary)",
+              fontSize: "1rem",
+              fontWeight: 500,
+              lineHeight: "1.5rem",
+              fontFamily: "inherit",
+              // Driven by --cta-ty CSS custom property on the scroll container,
+              // not React state — avoids re-rendering slots on every scroll tick.
+              transform: "translateY(var(--cta-ty, 0px))",
+              transition: "transform 0.3s ease 0ms",
+            }}
+          >
+            {leftBtn.label}
+          </button>
+          <button
+            type="button"
+            onClick={() => rightBtn.trayId ? openTray(rightBtn.trayId) : undefined}
+            style={{
+              flex: 1,
+              height: 36,
+              borderRadius: 100,
+              border: "none",
+              cursor: "pointer",
+              backgroundColor: "var(--color-bgPrimary)",
+              color: "var(--color-fgInverse)",
+              fontSize: "1rem",
+              fontWeight: 500,
+              lineHeight: "1.5rem",
+              fontFamily: "inherit",
+              transform: "translateY(var(--cta-ty, 0px))",
+              transition: "transform 0.3s ease 30ms",
+            }}
+          >
+            {rightLabel}
+          </button>
+        </div>
+      </div>
+    );
+  }, [bottomTabBar, screens, openTray, renderDepositLabel]);
+
   // Render header based on config
   const renderHeader = (screen: TScreen) => {
     const config = getHeaderConfig(screen);
-    
+    const screenConfig = screens[screen];
+
     if (customRenderHeader) {
       return customRenderHeader(screen, config);
     }
 
+    // Custom header component (e.g. HomeTopNav) — renders in place of the default nav bar
+    if (screenConfig?.headerComponent) {
+      const HeaderComponent = screenConfig.headerComponent;
+      return <HeaderComponent />;
+    }
+
     const step = getCurrentStep(screen);
-    const isInvisible = config.invisible === true;
+
+    if (config.invisible === true) return null;
 
     return (
       <div
@@ -212,8 +508,6 @@ function ProtoKitContent<TScreen extends string>({
           justifyContent: "space-between",
           padding: "8px 16px",
           minHeight: 44,
-          opacity: isInvisible ? 0 : 1,
-          pointerEvents: isInvisible ? "none" : "auto",
         }}
       >
         {/* Left */}
@@ -225,20 +519,22 @@ function ProtoKitContent<TScreen extends string>({
               compact
               transparent
               accessibilityLabel="Go back"
-              onClick={() => {
-                const currentIndex = screenOrder.indexOf(screen);
-                if (currentIndex > 0) {
-                  navigate(screenOrder[currentIndex - 1]);
-                }
-              }}
+              // Only wire up the action when there's somewhere to go back to.
+              // Always rendering the button (even when invisible during a transition)
+              // keeps the header height constant, preventing a layout jump at
+              // the moment canGoBack flips (which coincides with the slide start).
+              onClick={config.backDisabled || !canGoBack ? undefined : goBack}
             />
           )}
         </div>
 
         {/* Center */}
-        <div style={{ flex: 1, padding: "0 8px" }}>
+        <div style={{ flex: 1, padding: "0 8px", display: "flex", justifyContent: "center", alignItems: "center" }}>
           {config.center === "stepper" && totalSteps > 0 && (
             <ProgressStepper currentStep={step} totalSteps={totalSteps} />
+          )}
+          {config.center !== "stepper" && config.center != null && (
+            <Text font="label1" color="fg">{config.center}</Text>
           )}
         </div>
 
@@ -391,6 +687,7 @@ function ProtoKitContent<TScreen extends string>({
             onAddNote={() => addNote(currentFlow)}
             hintsEnabled={showHints}
             onToggleHints={() => setShowHints((prev) => !prev)}
+            extraContent={renderToolbarExtra?.()}
           />
         )}
         <CanvasNotes
@@ -413,40 +710,47 @@ function ProtoKitContent<TScreen extends string>({
     <div
       ref={screenContentRef}
       style={{
+        "--cta-ty": "0px",
         height: "100%",
         display: "flex",
         flexDirection: "column",
         position: "relative",
         overflow: "hidden",
-      }}
+      } as React.CSSProperties}
     >
-      {/* Fixed Header - iOS Status Bar + App Header */}
-      <div
-        style={{
-          position: "relative",
-          zIndex: 10,
-          backgroundColor: "var(--color-bg)",
-          flexShrink: 0,
-        }}
-      >
-        {/* iOS Status Bar - only on desktop */}
-        {!isMobile && <IOSStatusBar />}
+      {/* iOS Status Bar only — the app header now lives inside each animated screen div */}
+      {!isMobile && (
+        <div style={{ position: "relative", zIndex: 10, backgroundColor: "var(--color-bg)", flexShrink: 0 }}>
+          <IOSStatusBar />
+        </div>
+      )}
 
-        {/* App Header */}
-        <div key={`header-${activeScreen}`}>{renderHeader(activeScreen)}</div>
-      </div>
-
-      {/* Animated screen container */}
+      {/* Animated screen container — each slide includes its own header */}
       <ScreenNavigator
         screens={screens}
         currentScreen={currentScreen}
         displayedScreen={displayedScreen}
         animationPhase={animationPhase}
-        getTransform={getTransform}
+        direction={direction}
         navigate={navigate}
         onShowWorkInProgress={showWorkInProgress}
         onOpenTray={openTray}
+        renderHeaderForScreen={renderHeader}
+        renderCTAForScreen={renderCTA}
       />
+
+      {/* Bottom tab bar — hidden on screens with hideTabBar: true */}
+      {bottomTabBar && bottomTabBar.tabs.length > 0 && !screens[currentScreen]?.hideTabBar && (
+        <BottomTabBar
+          tabs={bottomTabBar.tabs}
+          activeTabId={activeTabId}
+          showActionButtons={showActionButtons}
+          onNavigate={(screen, tabId) => {
+            setActiveTabId(tabId);
+            navigate(screen);
+          }}
+        />
+      )}
 
       {/* Tap hint overlay */}
       <TapHint
@@ -463,7 +767,10 @@ function ProtoKitContent<TScreen extends string>({
             key={tray.id}
             visible={activeTray === tray.id}
             onClose={closeTray}
-            onNavigate={(screen) => navigate(screen as TScreen)}
+            onNavigate={(screen) => {
+              closeTray();
+              navigate(screen as TScreen);
+            }}
           />
         );
       })}
@@ -543,6 +850,7 @@ function ProtoKitContent<TScreen extends string>({
           onAddNote={() => addNote(currentScreen)}
           hintsEnabled={showHints}
           onToggleHints={() => setShowHints((prev) => !prev)}
+          extraContent={renderToolbarExtra?.()}
         />
       )}
       <CanvasNotes

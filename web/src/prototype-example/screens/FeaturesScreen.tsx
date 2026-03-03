@@ -4,7 +4,7 @@ import { Button } from "@coinbase/cds-web/buttons/Button";
 import { Icon } from "@coinbase/cds-web/icons/Icon";
 import type { ScreenProps } from "../../proto-kit";
 
-type ExampleScreen = "welcome" | "features" | "howto" | "testing" | "complete";
+type ExampleScreen = "welcome" | "features" | "howto" | "testing" | "complete" | "cash";
 
 const FeatureItem = ({ 
   icon, 
@@ -52,7 +52,7 @@ export const FeaturesScreen = ({
           root: {
             flex: 1,
             overflow: "auto",
-            WebkitOverflowScrolling: "touch",
+            overscrollBehavior: "none",
             paddingBottom: 80,
           },
         }}

@@ -1,0 +1,27 @@
+---
+description: Asset icon sizing inside ListCell media prop
+globs: web/src/**/*.tsx
+alwaysApply: false
+---
+
+# Asset Icon Size in ListCell
+
+All asset icons rendered inside a `ListCell` `media` prop must be **32×32px** with a **16px border-radius** (circular).
+
+```tsx
+// ✅ CORRECT
+media={
+  <div style={{ width: 32, height: 32, borderRadius: 16, ... }}>
+    <CryptoIcon ... />
+  </div>
+}
+
+// ❌ WRONG — do not use 36, 40, or any other size
+media={
+  <div style={{ width: 36, height: 36, borderRadius: 18, ... }}>
+    <CryptoIcon ... />
+  </div>
+}
+```
+
+This applies to all asset icon wrappers: `CryptoIcon`, `FiatIcon`, `Icon`, or any custom badge used as a `ListCell` media item.

@@ -4,7 +4,7 @@ import { Button } from "@coinbase/cds-web/buttons/Button";
 import { SpotSquare } from "@coinbase/cds-web/illustrations/SpotSquare";
 import type { ScreenProps } from "../../proto-kit";
 
-type ExampleScreen = "welcome" | "features" | "howto" | "testing" | "complete";
+type ExampleScreen = "welcome" | "features" | "howto" | "testing" | "complete" | "cash";
 
 /**
  * Complete screen - Final screen of the example prototype

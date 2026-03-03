@@ -7,7 +7,7 @@ import { Banner } from "@coinbase/cds-web/banner/Banner";
 import { SegmentedTabs } from "@coinbase/cds-web/tabs/SegmentedTabs";
 import type { ScreenProps } from "../../proto-kit";
 
-type ExampleScreen = "welcome" | "features" | "howto" | "testing" | "complete";
+type ExampleScreen = "welcome" | "features" | "howto" | "testing" | "complete" | "cash";
 type TabId = "fresh" | "existing";
 type TabValue = { id: TabId; label: string };
 
@@ -167,7 +167,7 @@ export const HowToScreen = ({
           root: {
             flex: 1,
             overflow: "auto",
-            WebkitOverflowScrolling: "touch",
+            overscrollBehavior: "none",
             paddingBottom: 80,
           },
         }}

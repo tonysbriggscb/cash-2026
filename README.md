@@ -94,6 +94,32 @@ Ask Cursor to run these for you:
 
 ---
 
+## Mobile app screens
+
+The prototype is a **web preview** of mobile screens. It uses **CDS Web** (`@coinbase/cds-web`) so you can run and share it in the browser. The real app uses **CDS Mobile** (`@coinbase/cds-mobile`) on React Native. The bottom tab bar and other components are built with the same design language; in the native app the tab bar is `@coinbase/cds-mobile/tabs/TabNavigation`.
+
+### Showing mobile prototypes (CDS mobile in Test Kit)
+
+To show the **Expo web app** (CDS mobile) inside the Test Kit device frame while keeping the toolbar and clickable navigation:
+
+1. **Run the Expo app for web** in one terminal (e.g. from repo root):
+   ```bash
+   yarn mobile:web
+   ```
+   Note the URL (e.g. `http://localhost:19006`).
+
+2. **Run Test Kit with the embed URL** in another terminal:
+   ```bash
+   VITE_EXPO_WEB_URL=http://localhost:19006 yarn dev
+   ```
+   Or add to `.env` or `.env.local`: `VITE_EXPO_WEB_URL=http://localhost:19006`
+
+3. Open the Test Kit URL (e.g. `http://localhost:8081`). The device frame will show the Expo web app in an iframe. The **control bar** (restart, flow, dark mode) and **screen/flow dropdown** stay in Test Kit; changing screen or flow updates the iframe URL (`?screen=...&flow=...`), and the mobile app reads those params to show the right screen.
+
+4. The mobile app (when run for web) reads `?screen=` and `?flow=` from the URL so it stays in sync with Test Kit. Add or map screens in `mobile/App.tsx` (`PROTOTYPE_SCREENS` and `PrototypeScreenId`) to match your web prototype screen keys.
+
+---
+
 ## Project Structure
 
 ```

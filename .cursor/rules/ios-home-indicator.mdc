@@ -1,0 +1,28 @@
+---
+description: iOS home indicator spacing rule for prototype screens
+globs: web/src/**/*.tsx
+alwaysApply: false
+---
+
+# iOS Home Indicator Spacing
+
+The iOS home indicator (the thin pill at the bottom of the screen) must always have **8px of padding below it**, so it sits 8px from the physical bottom of the screen.
+
+Apply this to every screen and tray that renders its own home indicator:
+
+```tsx
+// ✅ CORRECT — paddingBottom: 8 on the home indicator wrapper
+<div style={{ display: "flex", justifyContent: "center", paddingTop: 16, paddingBottom: 8 }}>
+  <div style={{ width: 134, height: 5, borderRadius: 100, backgroundColor: "var(--color-fg)" }} />
+</div>
+
+// ❌ WRONG — no bottom padding, or padding applied on a parent instead
+<div style={{ display: "flex", justifyContent: "center", paddingTop: 16 }}>
+  <div style={{ width: 134, height: 5, borderRadius: 100, backgroundColor: "var(--color-fg)" }} />
+</div>
+```
+
+Files that currently render the home indicator:
+- `web/src/prototype-example/screens/cash/DepositInputScreen.tsx`
+- `web/src/prototype-example/screens/cash/DepositTray.tsx`
+- `web/src/prototype-example/screens/cash/WithdrawTray.tsx`
