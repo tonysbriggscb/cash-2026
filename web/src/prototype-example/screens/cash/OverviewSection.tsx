@@ -1,14 +1,14 @@
 import { VStack } from "@coinbase/cds-web/layout";
 import { Text } from "@coinbase/cds-web/typography/Text";
 import { SectionHeader } from "@coinbase/cds-web/section-header";
-import { ListCell } from "@coinbase/cds-web/cells";
+import { AppListCell } from "../../AppListCell";
 
 import { useRegion } from "../../RegionContext";
 import type { OverviewBreakdownItem, OverviewData } from "./data";
 import { getCashDisplayTotal } from "./data";
 import { formatBalance, SECTION_HEADER_HEIGHT } from "./shared";
 
-type ExampleScreen = "welcome" | "features" | "howto" | "testing" | "complete" | "cash" | "availableToTrade" | "inUse";
+type ExampleScreen = "welcome" | "features" | "howto" | "testing" | "complete" | "cash" | "availableToTrade" | "inUse" | "pendingSweeps";
 
 function SegmentedBar({ items }: { items: OverviewBreakdownItem[] }) {
   const visibleItems = items.filter((i) => i.amount > 0);
@@ -98,61 +98,33 @@ export function OverviewSection({
           {breakdown.map((item) => {
             const isAvailableToTrade = item.label === "Available to trade";
             const isInUse = item.label === "In use";
-            const cell = (
-              <ListCell
-                title={item.label}
-                detail={formatBalance(item.amount, region)}
-                spacingVariant="condensed"
-                media={
-                  <div
-                    style={{
-                      width: 16,
-                      height: 16,
-                      flexShrink: 0,
-                      borderRadius: "50%",
-                      backgroundColor: item.color,
-                    }}
-                  />
-                }
-                styles={{
-                  root: { paddingTop: 0, paddingBottom: 0, marginTop: 0, marginBottom: 0 },
-                  contentContainer: { paddingTop: 4, paddingBottom: 4 },
-                }}
-              />
-            );
-            if (isAvailableToTrade && onNavigate) {
-              return (
-                <div
-                  key={item.label}
-                  className="overview-breakdown-cell"
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => onNavigate("availableToTrade")}
-                  onKeyDown={(e) => e.key === "Enter" && onNavigate("availableToTrade")}
-                  style={{ cursor: "pointer" }}
-                >
-                  {cell}
-                </div>
-              );
-            }
-            if (isInUse && onNavigate) {
-              return (
-                <div
-                  key={item.label}
-                  className="overview-breakdown-cell"
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => onNavigate("inUse")}
-                  onKeyDown={(e) => e.key === "Enter" && onNavigate("inUse")}
-                  style={{ cursor: "pointer" }}
-                >
-                  {cell}
-                </div>
-              );
-            }
+            const isPendingSweeps = item.label === "Pending sweeps";
+            const onClick = isAvailableToTrade && onNavigate
+              ? () => onNavigate("availableToTrade")
+              : isInUse && onNavigate
+              ? () => onNavigate("inUse")
+              : isPendingSweeps && onNavigate
+              ? () => onNavigate("pendingSweeps")
+              : undefined;
             return (
               <div key={item.label} className="overview-breakdown-cell">
-                {cell}
+                <AppListCell
+                  paddingX={0}
+                  title={item.label}
+                  detail={formatBalance(item.amount, region)}
+                  onClick={onClick}
+                  media={
+                    <div
+                      style={{
+                        width: 16,
+                        height: 16,
+                        flexShrink: 0,
+                        borderRadius: "50%",
+                        backgroundColor: item.color,
+                      }}
+                    />
+                  }
+                />
               </div>
             );
           })}

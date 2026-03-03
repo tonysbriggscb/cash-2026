@@ -6,7 +6,14 @@ import { HomeChart } from "./HomeChart";
 import { HomeHoldings } from "./HomeHoldings";
 import { HomeCrypto } from "./HomeCrypto";
 import { HomeCash } from "./HomeCash";
+import { HomeEarning } from "./HomeEarning";
+import { HomeRecommended } from "./HomeRecommended";
 import { HomeWatchlist } from "./HomeWatchlist";
+import { HomeAssetSection } from "./HomeAssetSection";
+import { TransactionsSection } from "../cash/TransactionsSection";
+import { defaultTransactionsData } from "../cash/data";
+import { STOCKS, DERIVATIVES, PREDICTIONS } from "./constants/mock-us-assets";
+import { useRegion } from "../../RegionContext";
 import type { TimePeriod } from "./constants/mock-portfolio";
 
 // Module-level state persists across remounts (e.g. during push-transition animation)
@@ -15,6 +22,8 @@ let _chartExpanded = true;
 let _period: TimePeriod = "All";
 
 export const CoinbaseHome = ({ onNavigate }: ScreenProps) => {
+  const { region } = useRegion();
+  const isUS = region === "US";
   const [period, setPeriod] = useState<TimePeriod>(_period);
   const [chartExpanded, setChartExpanded] = useState(_chartExpanded);
 
@@ -62,7 +71,31 @@ export const CoinbaseHome = ({ onNavigate }: ScreenProps) => {
         <Divider />
         <HomeCrypto period={period} />
         <Divider />
+        {isUS && (
+          <>
+            <HomeAssetSection title="Stocks" items={STOCKS} />
+            <Divider />
+            <HomeAssetSection title="Derivatives" items={DERIVATIVES} />
+            <Divider />
+            <HomeAssetSection title="Predictions" items={PREDICTIONS} />
+            <Divider />
+          </>
+        )}
         <HomeCash onNavigate={onNavigate} />
+        {isUS && (
+          <>
+            <Divider />
+            <HomeEarning onNavigate={onNavigate} />
+            <Divider />
+            <HomeRecommended />
+          </>
+        )}
+        {!isUS && (
+          <>
+            <Divider />
+            <TransactionsSection data={defaultTransactionsData} />
+          </>
+        )}
         <div style={{ height: 60 }} />
       </div>
     </div>

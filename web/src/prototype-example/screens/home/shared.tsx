@@ -1,26 +1,14 @@
 import type { ComponentProps } from "react";
-import { ListCell } from "@coinbase/cds-web/cells";
+import { AppListCell } from "../../AppListCell";
 
 /**
- * Thin wrapper around CDS ListCell that locks in the consistent row spacing
- * used throughout all home-screen asset lists (Holdings, Crypto, Watchlist).
+ * Home-screen list cell — a preset of AppListCell with no horizontal padding
+ * on the pressable (the parent section already provides 24px side context).
  *
- * Keeps every section visually identical without repeating the same spacing
- * props in three different places.
+ * Changing AppListCell updates every row across the whole prototype.
  */
-type HomeListCellProps = Omit<
-  ComponentProps<typeof ListCell>,
-  "spacingVariant" | "outerSpacing" | "styles"
->;
+type HomeListCellProps = Omit<ComponentProps<typeof AppListCell>, "paddingX">;
 
 export const HomeListCell = (props: HomeListCellProps) => (
-  <ListCell
-    {...props}
-    spacingVariant="condensed"
-    outerSpacing={{ paddingX: 0, paddingY: 0 }}
-    styles={{
-      root: { paddingTop: 0, paddingBottom: 0, marginTop: 0, marginBottom: 0 },
-      contentContainer: { paddingTop: 4, paddingBottom: 4 },
-    }}
-  />
+  <AppListCell paddingX={0} {...props} />
 );

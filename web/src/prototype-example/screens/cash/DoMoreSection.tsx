@@ -33,7 +33,7 @@ function DoMoreCard({
       <SecondaryIconBox name={item.icon} />
       <div style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
         <Text font="headline" display="block">{item.title}</Text>
-        <Text font="label2" color="fgMuted" display="block">{item.description}</Text>
+        <Text font="label2" color="fgMuted" display="block" style={{ whiteSpace: "pre-line" }}>{item.description}</Text>
       </div>
     </div>
   );
@@ -50,7 +50,7 @@ export function DoMoreSection({ data }: { data: DoMoreWithCashData }) {
   }
 
   return (
-    <VStack gap={0} style={{ paddingTop: 16, paddingBottom: 16 }}>
+    <VStack gap={0} style={{ paddingTop: 16, paddingBottom: 24 }}>
       <SectionHeader
         title={
           <Text as="h3" display="block" font="title3">

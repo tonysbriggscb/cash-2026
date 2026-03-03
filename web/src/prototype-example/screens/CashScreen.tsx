@@ -31,9 +31,10 @@ export const CashScreen = ({ onNavigate }: ScreenProps<ExampleScreen>) => {
       style={{
         flex: 1,
         minHeight: 0,
-        overflow: "auto",
-        overscrollBehavior: "none",
-      }}
+      overflow: "auto",
+      overscrollBehavior: "none",
+      paddingBottom: 60,
+    }}
     >
       <OverviewSection data={defaultOverviewData} onNavigate={onNavigate} />
       <Divider direction="horizontal" />

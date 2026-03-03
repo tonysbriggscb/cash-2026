@@ -222,6 +222,12 @@ function ProtoKitContent<TScreen extends string>({
   const lastScrollTopRef = useRef(0);
   const screenContentRef = useRef<HTMLDivElement>(null);
   const alternateContentRef = useRef<HTMLDivElement>(null);
+  // Measured height of the rendered tab bar so the fixed CTA overlay can be
+  // positioned above it (the in-slot CTAs use bottom:0 of the content wrapper
+  // which excludes the tab bar; the fixed overlay needs the same offset).
+  // 94 is a reasonable pre-measurement estimate (icon row ~65px + home indicator ~29px)
+  // so the CTAs don't flash at the wrong position on first paint.
+  const [tabBarHeight, setTabBarHeight] = useState(94);
   
   // Use flow from URL if specified, otherwise default to first flow
   const [currentFlow, setCurrentFlow] = useState(() => {
@@ -343,6 +349,15 @@ function ProtoKitContent<TScreen extends string>({
     }
   }, [animationPhase]);
 
+  // Measure the rendered tab bar height once after mount so the fixed CTA overlay
+  // knows how far from the bottom of screenContent to sit.
+  useEffect(() => {
+    const el = screenContentRef.current?.querySelector(".proto-kit-bottom-tab-bar");
+    if (el) {
+      setTabBarHeight(el.getBoundingClientRect().height);
+    }
+  }, []);
+
   // Auto-hide toast
   useEffect(() => {
     if (showToast && !toastHiding) {
@@ -370,25 +385,44 @@ function ProtoKitContent<TScreen extends string>({
     return screenOrder.indexOf(screen);
   };
 
+  // Resolve action buttons for any screen (screen-level config takes priority over tab config).
+  const getScreenActionButtons = useCallback((screen: TScreen) => {
+    if (!bottomTabBar || bottomTabBar.tabs.length === 0) return undefined;
+    if (screens[screen]?.hideTabBar) return undefined;
+    let ab = screens[screen]?.actionButtons;
+    if (!ab) {
+      const tab = bottomTabBar.tabs.find((t) => (t.screen as string) === (screen as string));
+      ab = tab?.actionButtons;
+    }
+    return ab ?? undefined;
+  }, [bottomTabBar, screens]);
+
+  // True when both the outgoing and incoming screen share identical CTA labels.
+  // During animation, currentScreen = destination and displayedScreen = source.
+  // During idle, both are equal so this is always true for any screen that has CTAs.
+  const ctasAreSame = useMemo(() => {
+    const curr = getScreenActionButtons(currentScreen);
+    const disp = getScreenActionButtons(displayedScreen);
+    if (!curr || !disp) return false;
+    return (
+      (curr.left?.label ?? "") === (disp.left?.label ?? "") &&
+      (curr.right?.label ?? "") === (disp.right?.label ?? "")
+    );
+  }, [getScreenActionButtons, currentScreen, displayedScreen]);
+
   // Render CTA action buttons inside each screen slot so they slide with the transition.
+  // When CTAs are identical between source and destination screens they are rendered in
+  // a fixed overlay (see below) instead, so they appear to stay in place.
   //
   // Intentionally does NOT capture showActionButtons from React state — button visibility
   // is driven by the CSS custom property --cta-ty set directly on the scroll container,
   // so scroll events never cause ScreenNavigator to re-render (which would interrupt
   // in-flight CSS transitions).
   const renderCTA = useCallback((screen: TScreen) => {
-    if (!bottomTabBar || bottomTabBar.tabs.length === 0) return null;
-    if (screens[screen]?.hideTabBar) return null;
+    // Fixed overlay handles rendering when CTAs are the same on both screens.
+    if (ctasAreSame) return null;
 
-    // Screen-level config takes priority; fall back to the matching tab's config
-    // (e.g. the "home" tab owns "Transfer / Buy & sell" but the screen itself has none).
-    let actionButtons = screens[screen]?.actionButtons;
-    if (!actionButtons) {
-      const tab = bottomTabBar.tabs.find(
-        (t) => (t.screen as string) === (screen as string)
-      );
-      actionButtons = tab?.actionButtons;
-    }
+    const actionButtons = getScreenActionButtons(screen);
     if (!actionButtons) return null;
 
     const leftBtn = actionButtons.left ?? { label: "Withdraw", trayId: "withdraw" };
@@ -479,7 +513,50 @@ function ProtoKitContent<TScreen extends string>({
         </div>
       </div>
     );
-  }, [bottomTabBar, screens, openTray, renderDepositLabel]);
+  }, [ctasAreSame, getScreenActionButtons, openTray, renderDepositLabel]);
+
+  // True when both the outgoing and incoming screen have a tab bar (i.e. neither
+  // has hideTabBar set). In that case the tab bar is rendered as a fixed overlay
+  // outside the sliding slots so it stays in place during the transition.
+  const tabBarsAreSame = useMemo(() => {
+    if (!bottomTabBar || bottomTabBar.tabs.length === 0) return false;
+    return !screens[currentScreen]?.hideTabBar && !screens[displayedScreen]?.hideTabBar;
+  }, [bottomTabBar, screens, currentScreen, displayedScreen]);
+
+  // Render the bottom tab bar inside each screen slot so it slides with the transition.
+  // When both screens have a tab bar the fixed overlay (below) handles the visible
+  // rendering, but we still render an invisible placeholder here to preserve the
+  // slot's flex layout — without it, the content wrapper stretches to the full slot
+  // height and any in-slot CTA (rendered when labels differ) anchors behind the
+  // fixed tab bar overlay rather than above it.
+  // Screens with hideTabBar: true get null so the slot fills the full height.
+  const renderTabBar = useCallback((screen: TScreen) => {
+    if (!bottomTabBar || bottomTabBar.tabs.length === 0) return null;
+    if (screens[screen]?.hideTabBar) return null;
+    if (tabBarsAreSame) {
+      return (
+        <div style={{ visibility: "hidden", pointerEvents: "none", flexShrink: 0 }}>
+          <BottomTabBar
+            tabs={bottomTabBar.tabs}
+            activeTabId={activeTabId}
+            showActionButtons={showActionButtons}
+            onNavigate={() => {}}
+          />
+        </div>
+      );
+    }
+    return (
+      <BottomTabBar
+        tabs={bottomTabBar.tabs}
+        activeTabId={activeTabId}
+        showActionButtons={showActionButtons}
+        onNavigate={(s, tabId) => {
+          setActiveTabId(tabId);
+          navigate(s);
+        }}
+      />
+    );
+  }, [bottomTabBar, screens, activeTabId, showActionButtons, navigate, tabBarsAreSame]);
 
   // Render header based on config
   const renderHeader = (screen: TScreen) => {
@@ -725,7 +802,8 @@ function ProtoKitContent<TScreen extends string>({
         </div>
       )}
 
-      {/* Animated screen container — each slide includes its own header */}
+      {/* Animated screen container — each slide includes its own header and tab bar,
+          so all chrome travels with the content and there are no external layout shifts. */}
       <ScreenNavigator
         screens={screens}
         currentScreen={currentScreen}
@@ -737,20 +815,123 @@ function ProtoKitContent<TScreen extends string>({
         onOpenTray={openTray}
         renderHeaderForScreen={renderHeader}
         renderCTAForScreen={renderCTA}
+        renderTabBarForScreen={renderTabBar}
       />
 
-      {/* Bottom tab bar — hidden on screens with hideTabBar: true */}
-      {bottomTabBar && bottomTabBar.tabs.length > 0 && !screens[currentScreen]?.hideTabBar && (
-        <BottomTabBar
-          tabs={bottomTabBar.tabs}
-          activeTabId={activeTabId}
-          showActionButtons={showActionButtons}
-          onNavigate={(screen, tabId) => {
-            setActiveTabId(tabId);
-            navigate(screen);
-          }}
-        />
+      {/* Fixed tab bar — rendered outside the animated slots when both the source and
+          destination screens have a tab bar, so it stays in place during the transition. */}
+      {tabBarsAreSame && bottomTabBar && (
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 3 }}>
+          <BottomTabBar
+            tabs={bottomTabBar.tabs}
+            activeTabId={activeTabId}
+            showActionButtons={showActionButtons}
+            onNavigate={(s, tabId) => {
+              setActiveTabId(tabId);
+              navigate(s);
+            }}
+          />
+        </div>
       )}
+
+      {/* Fixed CTA overlay — rendered outside the animated slots when the source and
+          destination screens share identical CTA labels, so the buttons appear to
+          stay in place instead of sliding out with the old screen and back in with
+          the new one.
+          bottom is offset by the tab bar height so the overlay sits in the same
+          position as the in-slot CTAs (which anchor to the content wrapper above
+          the tab bar, not the full slot height). */}
+      {(() => {
+        if (!ctasAreSame) return null;
+        const actionButtons = getScreenActionButtons(currentScreen);
+        if (!actionButtons) return null;
+        const leftBtn = actionButtons.left ?? { label: "Withdraw", trayId: "withdraw" };
+        const rightBtn = actionButtons.right ?? { label: null as string | null };
+        const depositLabelNode = renderDepositLabel?.();
+        const rightLabel: React.ReactNode = rightBtn.label ?? depositLabelNode ?? "Deposit";
+        return (
+          <div
+            style={{
+              position: "absolute",
+              bottom: tabBarHeight,
+              left: 0,
+              right: 0,
+              height: 104,
+              zIndex: 5,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+              overflow: "hidden",
+              pointerEvents: "none",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: `linear-gradient(to bottom, rgba(255,255,255,0) 0%, var(--color-bg) 82.692%)`,
+                pointerEvents: "none",
+                transform: "translateY(var(--cta-ty, 0px))",
+                transition: "transform 0.3s ease 0ms",
+              }}
+            />
+            <div
+              style={{
+                position: "relative",
+                zIndex: 1,
+                display: "flex",
+                gap: 8,
+                paddingLeft: 16,
+                paddingRight: 16,
+                pointerEvents: "auto",
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => leftBtn.trayId ? openTray(leftBtn.trayId) : undefined}
+                style={{
+                  flex: 1,
+                  height: 36,
+                  borderRadius: 100,
+                  border: "none",
+                  cursor: "pointer",
+                  backgroundColor: "rgb(var(--blue5))",
+                  color: "var(--color-fgPrimary)",
+                  fontSize: "1rem",
+                  fontWeight: 500,
+                  lineHeight: "1.5rem",
+                  fontFamily: "inherit",
+                  transform: "translateY(var(--cta-ty, 0px))",
+                  transition: "transform 0.3s ease 0ms",
+                }}
+              >
+                {leftBtn.label}
+              </button>
+              <button
+                type="button"
+                onClick={() => rightBtn.trayId ? openTray(rightBtn.trayId) : undefined}
+                style={{
+                  flex: 1,
+                  height: 36,
+                  borderRadius: 100,
+                  border: "none",
+                  cursor: "pointer",
+                  backgroundColor: "var(--color-bgPrimary)",
+                  color: "var(--color-fgInverse)",
+                  fontSize: "1rem",
+                  fontWeight: 500,
+                  lineHeight: "1.5rem",
+                  fontFamily: "inherit",
+                  transform: "translateY(var(--cta-ty, 0px))",
+                  transition: "transform 0.3s ease 30ms",
+                }}
+              >
+                {rightLabel}
+              </button>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Tap hint overlay */}
       <TapHint

@@ -9,6 +9,12 @@ import { HomeListCell } from "./shared";
 
 const PENDING_SWEEPS_LABEL = "Pending sweeps";
 
+const LABEL_TO_SCREEN: Record<string, string> = {
+  "Available to trade": "availableToTrade",
+  "In use": "inUse",
+  "Pending sweeps": "cash",
+};
+
 function SegmentedBar({ items }: { items: OverviewBreakdownItem[] }) {
   const visibleItems = items.filter((i) => i.amount > 0);
   const total = visibleItems.reduce((s, i) => s + i.amount, 0) || 1;
@@ -55,7 +61,7 @@ export const HomeCash = ({ onNavigate }: HomeCashProps) => {
           <Text as="h2" font="title3">
             {defaultOverviewData.title}
           </Text>
-          <Text font="title3" color="fgMuted">
+          <Text font="title4" color="fgMuted">
             {formatBalance(getCashDisplayTotal(region), region)}
           </Text>
         </div>
@@ -101,12 +107,12 @@ export const HomeCash = ({ onNavigate }: HomeCashProps) => {
               }}
             />
           }
-          onClick={() => onNavigate?.("cash")}
+          onClick={() => onNavigate?.(LABEL_TO_SCREEN[item.label] ?? "cash")}
         />
       ))}
 
       <div style={{ padding: "16px 24px 24px" }}>
-        <Button variant="secondary" compact width="100%" onClick={() => onNavigate?.("cash")}>
+        <Button variant="secondary" compact width="100%" onClick={() => onNavigate?.("depositInput")}>
           Deposit
         </Button>
       </div>

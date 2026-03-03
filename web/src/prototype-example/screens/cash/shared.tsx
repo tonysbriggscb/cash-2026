@@ -1,4 +1,5 @@
 import React from "react";
+import type { ComponentProps } from "react";
 import { Icon } from "@coinbase/cds-web/icons/Icon";
 import { Text } from "@coinbase/cds-web/typography/Text";
 import { ListCell } from "@coinbase/cds-web/cells";
@@ -179,6 +180,8 @@ export interface AutomationListCellProps {
   item: AutomationListCellItem;
   /** Override the end action; if not set, renders a secondary Button with item.buttonLabel */
   end?: React.ReactNode;
+  /** Set to false when the end contains its own interactive element (e.g. Switch) */
+  renderAsPressable?: boolean;
 }
 
 const automationTitleStyles: React.CSSProperties = {
@@ -196,13 +199,14 @@ function AutomationListCellMedia({ item }: { item: AutomationListCellItem }) {
   return <SecondaryIconBox name={item.icon} active={item.iconActive} />;
 }
 
-export function AutomationListCell({ item, end }: AutomationListCellProps) {
+export function AutomationListCell({ item, end, renderAsPressable }: AutomationListCellProps) {
   return (
     <ListCell
       title={item.title}
       description={item.description}
       detail={item.detail}
       multiline
+      renderAsPressable={renderAsPressable}
       styles={{
         title: automationTitleStyles,
         description: automationDescriptionStyles,
@@ -268,7 +272,7 @@ export function RewardsListCell({ item, descriptionColor, endVariant = "button",
           );
 
   return (
-    <ListCell
+    <CashListCell
       title={item.title}
       description={item.description}
       detail={item.detail}
@@ -278,21 +282,27 @@ export function RewardsListCell({ item, descriptionColor, endVariant = "button",
           {item.subdetail}
         </Text>
       }
-      innerSpacing={{ paddingY: 1 }}
-      outerSpacing={{ paddingY: 1 }}
-      styles={{
-        root: {
-          paddingTop: 8,
-          paddingBottom: 8,
-          marginTop: 0,
-          marginBottom: 0,
-          minHeight: 48,
-        },
-        description: descriptionStyle,
-      }}
+      styles={{ description: descriptionStyle }}
       media={<CircleIcon name={item.icon} bg={item.iconBg} />}
       priority="end"
       end={endContent}
     />
   );
 }
+
+// ---------------------------------------------------------------------------
+// Standard asset / transaction list cell for cash screens.
+// Delegates entirely to AppListCell — the single source of truth for all
+// list rows in the prototype. Change AppListCell to update everything.
+// ---------------------------------------------------------------------------
+
+import { AppListCell } from "../../AppListCell";
+
+type CashListCellProps = Omit<ComponentProps<typeof AppListCell>, "paddingX"> & {
+  /** Horizontal padding inside the pressable zone. Defaults to 24px. */
+  pressablePaddingX?: number;
+};
+
+export const CashListCell = ({ pressablePaddingX = 24, ...props }: CashListCellProps) => (
+  <AppListCell paddingX={pressablePaddingX} {...props} />
+);

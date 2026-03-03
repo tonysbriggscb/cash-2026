@@ -1,12 +1,11 @@
 import { VStack, HStack } from "@coinbase/cds-web/layout";
 import { Text } from "@coinbase/cds-web/typography/Text";
 import { SectionHeader } from "@coinbase/cds-web/section-header";
-import { ListCell } from "@coinbase/cds-web/cells";
 import { Divider } from "@coinbase/cds-web/layout";
 
 import { PrototypeMediaCard } from "../../../proto-kit";
 import { defaultOverviewData } from "./data";
-import { CryptoIcon, formatBalance, SECTION_HEADER_HEIGHT } from "./shared";
+import { CashListCell, CryptoIcon, formatBalance, SECTION_HEADER_HEIGHT } from "./shared";
 import { useRegion } from "../../RegionContext";
 import type { Region } from "../../RegionContext";
 
@@ -18,17 +17,22 @@ function getBreakdown(total: number, region: Region) {
   const half = Math.floor(total / 2);
   if (region === "UK") {
     return [
-      { label: "USDC", amount: half, mediaType: "usdc" as const },
       { label: "GBP", amount: total - half, mediaType: "fiat-gbp" as const },
+      { label: "USDC", amount: half, mediaType: "usdc" as const },
     ];
   }
   return [
-    { label: "USDC", amount: half, mediaType: "usdc" as const },
     { label: "US Dollar", amount: total - half, mediaType: "fiat-usd" as const },
+    { label: "USDC", amount: half, mediaType: "usdc" as const },
   ];
 }
 
-const YOU_MAY_ALSO_LIKE: Array<{ title: string; description: string; icon: string }> = [
+const YOU_MAY_ALSO_LIKE_UK: Array<{ title: string; description: string; icon: string }> = [
+  { title: "Crypto", description: "See what's trending", icon: "crypto" },
+  { title: "Save", description: "Earn interest on your cash", icon: "savingsBank" },
+];
+
+const YOU_MAY_ALSO_LIKE_US: Array<{ title: string; description: string; icon: string }> = [
   { title: "Crypto", description: "See what's trending", icon: "crypto" },
   { title: "Predictions", description: "Predict the outcome of events", icon: "nft" },
   { title: "Stocks", description: "Buy shares in public companies", icon: "candlesticks" },
@@ -42,13 +46,13 @@ function FiatIcon({ symbol }: { symbol: "$" | "£" }) {
         width: 32,
         height: 32,
         borderRadius: "50%",
-        backgroundColor: "var(--color-bgSecondary)",
+        backgroundColor: "var(--color-bgPrimary)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         fontSize: 14,
         fontWeight: 500,
-        color: "var(--color-fg)",
+        color: "var(--color-fgInverse)",
       }}
     >
       {symbol}
@@ -68,7 +72,7 @@ export function AvailableToTradeScreen() {
         flex: 1,
         minHeight: 0,
         overflow: "auto",
-        paddingBottom: 24,
+        paddingBottom: 60,
       }}
     >
       <VStack
@@ -100,7 +104,7 @@ export function AvailableToTradeScreen() {
 
       <VStack gap={0} className="available-to-trade-breakdown">
         {breakdown.map((row) => (
-          <ListCell
+          <CashListCell
             key={row.label}
             title={row.label}
             detail={formatBalance(row.amount, region)}
@@ -113,19 +117,6 @@ export function AvailableToTradeScreen() {
                 <FiatIcon symbol="$" />
               )
             }
-            spacingVariant="condensed"
-            styles={{
-              root: {
-                borderRadius: 16,
-                marginBottom: 8,
-                paddingLeft: 0,
-                paddingRight: 0,
-              },
-              pressable: {
-                paddingLeft: 24,
-                paddingRight: 24,
-              },
-            }}
           />
         ))}
       </VStack>
@@ -143,7 +134,7 @@ export function AvailableToTradeScreen() {
         />
         <VStack gap={0} style={{ paddingLeft: 24, paddingRight: 24 }}>
           <HStack gap={0} style={{ flexWrap: "wrap", gap: 8 }}>
-            {YOU_MAY_ALSO_LIKE.map((item) => (
+            {(region === "UK" ? YOU_MAY_ALSO_LIKE_UK : YOU_MAY_ALSO_LIKE_US).map((item) => (
               <div key={item.title} style={{ width: "calc(50% - 4px)", minWidth: 0 }}>
                 <PrototypeMediaCard item={item} layout="stacked" />
               </div>

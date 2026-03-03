@@ -97,7 +97,7 @@ export function useScreenNavigator<TScreen extends string>({
       const timer = setTimeout(() => {
         setDisplayedScreen(currentScreen);
         setAnimationPhase("idle");
-      }, 231);
+      }, 370);
       return () => clearTimeout(timer);
     }
   }, [animationPhase, currentScreen]);
@@ -158,6 +158,8 @@ interface ScreenNavigatorProps<TScreen extends string> {
   renderHeaderForScreen?: (screen: TScreen) => ReactNode;
   /** Renders CTA buttons for a given screen — inside the slot so they slide with the screen transition */
   renderCTAForScreen?: (screen: TScreen) => ReactNode;
+  /** Renders the bottom tab bar for a given screen — inside the slot so it slides with the screen transition */
+  renderTabBarForScreen?: (screen: TScreen) => ReactNode;
 }
 
 /**
@@ -180,6 +182,7 @@ export function ScreenNavigator<TScreen extends string>({
   getScreenBackground,
   renderHeaderForScreen,
   renderCTAForScreen,
+  renderTabBarForScreen,
 }: ScreenNavigatorProps<TScreen>) {
   const easing = "ease-out";
   const dur = "0.22s";
@@ -270,8 +273,14 @@ export function ScreenNavigator<TScreen extends string>({
       }}
     >
       {renderHeaderForScreen?.(screen)}
-      {renderSlot(screen)}
-      {renderCTAForScreen?.(screen)}
+      {/* Content + CTA are co-located in a flex-grow wrapper so the CTA's
+          position: absolute; bottom: 0 anchors to the content area, not the
+          full slot height (which now includes the tab bar below). */}
+      <div style={{ flex: 1, position: "relative", minHeight: 0, display: "flex", flexDirection: "column" }}>
+        {renderSlot(screen)}
+        {renderCTAForScreen?.(screen)}
+      </div>
+      {renderTabBarForScreen?.(screen)}
     </div>
   );
 

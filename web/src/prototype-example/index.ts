@@ -14,6 +14,7 @@ import { CompleteScreen } from "./screens/CompleteScreen";
 import { CashScreen } from "./screens/CashScreen";
 import { AvailableToTradeScreen } from "./screens/cash/AvailableToTradeScreen";
 import { InUseScreen } from "./screens/cash/InUseScreen";
+import { PendingSweepsScreen } from "./screens/cash/PendingSweepsScreen";
 import { DepositTray } from "./screens/cash/DepositTray";
 import { WithdrawTray } from "./screens/cash/WithdrawTray";
 import { DepositInputScreen } from "./screens/cash/DepositInputScreen";
@@ -31,7 +32,8 @@ export type ExampleScreen =
   | "cash"
   | "availableToTrade"
   | "inUse"
-  | "depositInput";
+  | "depositInput"
+  | "pendingSweeps";
 
 // Configure each screen with its component and header
 export const screens: Record<ExampleScreen, ScreenConfig<ExampleScreen>> = {
@@ -116,6 +118,18 @@ export const screens: Record<ExampleScreen, ScreenConfig<ExampleScreen>> = {
       right: { label: "Deposit", trayId: "deposit" },
     },
   },
+  pendingSweeps: {
+    component: PendingSweepsScreen,
+    header: {
+      left: "back",
+      center: "stepper",
+      right: null,
+    },
+    actionButtons: {
+      left: { label: "Transfer" },
+      right: { label: "Deposit", trayId: "deposit" },
+    },
+  },
   depositInput: {
     component: DepositInputScreen,
     header: {
@@ -157,6 +171,7 @@ export const screenOrder: ExampleScreen[] = [
   "cash",
   "availableToTrade",
   "inUse",
+  "pendingSweeps",
   "depositInput",
 ];
 
@@ -181,6 +196,7 @@ export const getStepForScreen = (screen: ExampleScreen): number => {
     case "cash": return 5;
     case "availableToTrade": return 5;
     case "inUse": return 5;
+    case "pendingSweeps": return 5;
     case "depositInput": return 5;
     default: return 0;
   }

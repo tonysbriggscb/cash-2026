@@ -33,6 +33,7 @@ function RewardsTicker({
   startUnits,
   stepUnits,
   currencySymbol,
+  paused = false,
   rewardUnits: externalRewardUnits,
   setRewardUnits: externalSetRewardUnits,
 }: {
@@ -40,6 +41,8 @@ function RewardsTicker({
   stepUnits: number;
   /** Currency symbol shown before the big number (e.g. £ or $) */
   currencySymbol: string;
+  /** When true the ticker is frozen — no new ticks are scheduled */
+  paused?: boolean;
   rewardUnits?: number;
   setRewardUnits?: React.Dispatch<React.SetStateAction<number>>;
 }) {
@@ -75,7 +78,9 @@ function RewardsTicker({
     setLastDigitY(endIndex * DIGIT_HEIGHT * -1);
 
     currentDigitRef.current = nextDigit;
-    currentIndexRef.current = endIndex % 10;
+    // Don't wrap — keep the running position accumulating so the column
+    // always scrolls in the same direction (never jumps back up).
+    currentIndexRef.current = endIndex;
   }, []);
 
   // ── wave ripple across static chars on 9 → 0 rollover ───────────────────
@@ -135,10 +140,19 @@ function RewardsTicker({
     const { lastDigit } = splitReward(rewardUnits);
     spinToDigit(lastDigit, false);
     didMountRef.current = true;
-    scheduleTick();
+    if (!paused) scheduleTick();
     return () => clearTick();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // ── pause / resume ────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (paused) {
+      clearTick();
+    } else {
+      scheduleTick();
+    }
+  }, [paused, clearTick, scheduleTick]);
 
   // ── derive display parts ──────────────────────────────────────────────────
   const { whole, staticPart } = splitReward(rewardUnits);
@@ -148,8 +162,10 @@ function RewardsTicker({
   // Ensure waveOffsets array is long enough
   const offsets = Array.from({ length: totalChars }, (_, i) => waveOffsets[i] ?? 0);
 
-  // ── digit column (0–9 repeated twice for seamless wrap) ───────────────────
-  const digitColumn = Array.from({ length: 20 }, (_, i) => i % 10);
+  // ── digit column — enough rows for a long session without wrapping ────────
+  // 100 rows = 10 full cycles; at one tick/second this lasts ~100 seconds
+  // before currentIndexRef would overflow, which is plenty for a demo.
+  const digitColumn = Array.from({ length: 100 }, (_, i) => i % 10);
 
   const charStyle: React.CSSProperties = {
     color: "var(--color-fgPositive)",
@@ -247,6 +263,8 @@ export function RewardsSection({ data }: { data: RewardsData }) {
   const { region } = useRegion();
   const currencySymbol = region === "UK" ? "£" : "$";
   const tickerContext = useRewardsTicker();
+  const totalUnits = tickerContext?.rewardUnits ?? data.startUnits;
+  const hasEarningItems = data.items.some((i) => (i.variant ?? "new-user") === "existing-user");
 
   return (
     <VStack gap={0} style={{ paddingTop: 16, paddingBottom: 16 }}>
@@ -262,17 +280,38 @@ export function RewardsSection({ data }: { data: RewardsData }) {
             startUnits={data.startUnits}
             stepUnits={data.stepUnits}
             currencySymbol={currencySymbol}
+            paused={!hasEarningItems}
             rewardUnits={tickerContext?.rewardUnits}
             setRewardUnits={tickerContext?.setRewardUnits}
           />
         }
       />
-      <VStack gap={0} className="cash-rewards-list">
+      <VStack gap={0} className="cash-rewards-list" style={{ gap: 8 }}>
         {data.items.map((item) => {
           const isGBPSavingsInUS = region === "US" && item.title === "GBP Savings";
           const displayItem = isGBPSavingsInUS
             ? { ...item, title: "Lending", buttonLabel: "Lend", icon: "percentage" as const }
             : { ...item };
+
+          // "existing-user" items show a live earned amount (+£X.XX) instead of a button.
+          const itemVariant = displayItem.variant ?? "new-user";
+          let earnedEnd: React.ReactNode | undefined;
+          if (itemVariant === "existing-user") {
+            const fraction = displayItem.earnedFraction ?? 1 / data.items.length;
+            const earned = (totalUnits * fraction) / REWARDS_SCALE;
+            const formatted = new Intl.NumberFormat(region === "US" ? "en-US" : "en-GB", {
+              style: "currency",
+              currency: region === "UK" ? "GBP" : "USD",
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }).format(earned);
+            earnedEnd = (
+              <Text font="body" color="fgMuted">
+                +{formatted}
+              </Text>
+            );
+          }
+
           return (
             <RewardsListCell
               key={displayItem.title}
@@ -280,7 +319,8 @@ export function RewardsSection({ data }: { data: RewardsData }) {
                 ...displayItem,
                 description: displayItem.rate,
               }}
-              endVariant={displayItem.endVariant ?? "button"}
+              endVariant={itemVariant === "existing-user" ? "detail" : (displayItem.endVariant ?? "button")}
+              end={earnedEnd}
             />
           );
         })}

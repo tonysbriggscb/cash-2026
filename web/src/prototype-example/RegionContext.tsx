@@ -2,17 +2,21 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 
 export type Region = "US" | "UK";
 
-/** URL path prefix for region-specific links (e.g. /prototype/us, /prototype/uk) */
-export const REGION_PATH_PREFIX = "/prototype";
+// Region is stored as ?region=us or ?region=uk so the URL is shareable
+// on static hosts (GitHub Pages, Vercel) without needing server-side routing.
 
-function getRegionFromPath(): Region {
+function getRegionFromSearch(): Region {
   if (typeof window === "undefined") return "UK";
-  const path = window.location.pathname;
-  return path.endsWith("/us") ? "US" : path.endsWith("/uk") ? "UK" : "UK";
+  const params = new URLSearchParams(window.location.search);
+  const r = params.get("region")?.toUpperCase();
+  return r === "US" ? "US" : "UK";
 }
 
-function getPathForRegion(region: Region): string {
-  return `${REGION_PATH_PREFIX}/${region.toLowerCase()}`;
+function applyRegionToSearch(region: Region): void {
+  const params = new URLSearchParams(window.location.search);
+  params.set("region", region.toLowerCase());
+  const newUrl = `${window.location.pathname}?${params.toString()}${window.location.hash}`;
+  window.history.replaceState(null, "", newUrl);
 }
 
 interface RegionContextValue {
@@ -23,15 +27,15 @@ interface RegionContextValue {
 const RegionContext = createContext<RegionContextValue | null>(null);
 
 export function RegionProvider({ children }: { children: React.ReactNode }) {
-  const [region, setRegionState] = useState<Region>(getRegionFromPath);
+  const [region, setRegionState] = useState<Region>(getRegionFromSearch);
 
   const setRegion = useCallback((value: Region) => {
     setRegionState(value);
-    window.history.replaceState(null, "", getPathForRegion(value));
+    applyRegionToSearch(value);
   }, []);
 
   useEffect(() => {
-    const onPopState = () => setRegionState(getRegionFromPath());
+    const onPopState = () => setRegionState(getRegionFromSearch());
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, []);

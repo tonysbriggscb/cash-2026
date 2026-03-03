@@ -1,11 +1,10 @@
 import { VStack } from "@coinbase/cds-web/layout";
 import { Text } from "@coinbase/cds-web/typography/Text";
-import { ListCell } from "@coinbase/cds-web/cells";
 import { Icon } from "@coinbase/cds-web/icons/Icon";
 import React from "react";
 
 import { defaultOverviewData } from "./data";
-import { formatBalance, CryptoIcon, SECTION_HEADER_HEIGHT } from "./shared";
+import { CashListCell, formatBalance, CryptoIcon, SECTION_HEADER_HEIGHT } from "./shared";
 import { useRegion } from "../../RegionContext";
 
 const inUseAmount =
@@ -27,17 +26,14 @@ function FiatGbpIcon() {
         width: 32,
         height: 32,
         borderRadius: "50%",
-        backgroundColor: "var(--color-bgSecondary)",
+        backgroundColor: "var(--color-bgPositive)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: 14,
-        fontWeight: 500,
-        color: "var(--color-fg)",
         flexShrink: 0,
       }}
     >
-      £
+      <Icon name="savingsBank" size="s" dangerouslySetColor="white" />
     </div>
   );
 }
@@ -63,49 +59,41 @@ interface USCellProps {
   title: string;
   description: React.ReactNode;
   detail: string;
-  subdetail?: React.ReactNode;
 }
 
-function USCell({ media, title, description, detail, subdetail }: USCellProps) {
+function USCell({ media, title, description, detail }: USCellProps) {
+  const [hovered, setHovered] = React.useState(false);
   return (
     <div
+      onClick={() => {}}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
         display: "flex",
         alignItems: "center",
         gap: 12,
         paddingLeft: 24,
         paddingRight: 24,
-        paddingTop: 10,
-        paddingBottom: 10,
-        minHeight: 56,
+        paddingTop: 4,
+        paddingBottom: 4,
+        minHeight: 48,
+        cursor: "pointer",
+        backgroundColor: hovered ? "var(--color-bgSecondary)" : "transparent",
+        transition: "background-color 0.15s ease",
       }}
     >
-      {/* Media */}
       <div style={{ flexShrink: 0 }}>{media}</div>
-
-      {/* Middle — title + description */}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <Text font="headline" color="fg" style={{ display: "block" }}>
-          {title}
-        </Text>
+        <Text font="headline" color="fg" style={{ display: "block" }}>{title}</Text>
         <div style={{ marginTop: 1 }}>
           {typeof description === "string" ? (
-            <Text font="label2" color="fgMuted">
-              {description}
-            </Text>
+            <Text font="label2" color="fgMuted">{description}</Text>
           ) : (
             description
           )}
         </div>
       </div>
-
-      {/* End — detail + subdetail */}
-      <div style={{ flexShrink: 0, textAlign: "right" }}>
-        <Text font="headline" color="fg" style={{ display: "block" }}>
-          {detail}
-        </Text>
-        {subdetail && <div style={{ marginTop: 1 }}>{subdetail}</div>}
-      </div>
+      <Text font="headline" color="fg" style={{ flexShrink: 0 }}>{detail}</Text>
     </div>
   );
 }
@@ -197,7 +185,7 @@ function InUseScreenUK() {
   return (
     <VStack
       gap={0}
-      style={{ flex: 1, minHeight: 0, overflow: "auto", paddingBottom: 24 }}
+      style={{ flex: 1, minHeight: 0, overflow: "auto", paddingBottom: 60 }}
     >
       <VStack
         gap={0}
@@ -230,7 +218,7 @@ function InUseScreenUK() {
         <VStack gap={0} style={{ marginTop: 24 }}>
           <BlockSectionHeader title="Savings" />
           <VStack gap={0} className="in-use-breakdown">
-            <ListCell
+            <CashListCell
               title="GBP Savings"
               description={
                 <Text font="label2" color="fgPositive">
@@ -240,8 +228,6 @@ function InUseScreenUK() {
               detail={formatBalance(inUseAmount, region)}
               media={<FiatGbpIcon />}
               multiline
-              spacingVariant="condensed"
-              styles={listCellStyles}
             />
           </VStack>
         </VStack>
@@ -260,7 +246,7 @@ function InUseScreenUS() {
   return (
     <VStack
       gap={0}
-      style={{ flex: 1, minHeight: 0, overflow: "auto", paddingBottom: 24 }}
+      style={{ flex: 1, minHeight: 0, overflow: "auto", paddingBottom: 60 }}
     >
       {/* Header */}
       <VStack
@@ -292,49 +278,53 @@ function InUseScreenUS() {
 
       {/* Lending */}
       <USSectionHeader title="Lending" />
-      <USCell
-        media={<CryptoIcon symbol="usdc" />}
-        title="Steakhouse USDC"
-        description={<Text font="label2" color="fgPositive">7.20% APY</Text>}
-        detail="$1,000.00"
-        subdetail={<Text font="label2" color="fgMuted">1,000 USDC</Text>}
-      />
+      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        <USCell
+          media={<CryptoIcon symbol="usdc" />}
+          title="Steakhouse USDC"
+          description={<Text font="label2" color="fgPositive">7.20% APY</Text>}
+          detail="$1,000.00"
+        />
+      </div>
 
       {/* Limit Orders */}
       <USSectionHeader title="Limit orders" />
-      <USCell
-        media={<CryptoIcon symbol="shib" />}
-        title="SHIB limit sell"
-        description="Sell @ $0.000024"
-        detail="$1,000.00"
-        subdetail={<Text font="label2" color="fgMuted">$0.000024</Text>}
-      />
-      <USCell
-        media={<CryptoIcon symbol="btc" />}
-        title="BTC limit buy"
-        description="Buy @ $60,000.00"
-        detail="$1,000.00"
-        subdetail={<Text font="label2" color="fgMuted">$90,000.00</Text>}
-      />
+      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        <USCell
+          media={<CryptoIcon symbol="shib" />}
+          title="SHIB limit sell"
+          description="Sell @ $0.000024"
+          detail="$1,000.00"
+        />
+        <USCell
+          media={<CryptoIcon symbol="btc" />}
+          title="BTC limit buy"
+          description="Buy @ $60,000.00"
+          detail="$1,000.00"
+        />
+      </div>
 
       {/* Derivatives */}
       <USSectionHeader title="Derivatives" />
-      <USCell
-        media={<CryptoIcon symbol="btc" />}
-        title="Sell BTC PERP"
-        description="2 contracts"
-        detail="$1,000.00"
-      />
+      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        <USCell
+          media={<CryptoIcon symbol="btc" />}
+          title="Sell BTC PERP"
+          description="2 contracts"
+          detail="$1,000.00"
+        />
+      </div>
 
       {/* Predictions */}
       <USSectionHeader title="Predictions" />
-      <USCell
-        media={<PredictionsIcon />}
-        title="Sell Yes · Noah Wyle"
-        description="Emmy Award for Drama Actor?"
-        detail="$1,000.00"
-        subdetail={<AvailableTag />}
-      />
+      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        <USCell
+          media={<PredictionsIcon />}
+          title="Sell Yes · Noah Wyle"
+          description="Emmy Award for Drama Actor?"
+          detail="$1,000.00"
+        />
+      </div>
     </VStack>
   );
 }

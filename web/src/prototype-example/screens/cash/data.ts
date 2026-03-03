@@ -60,6 +60,18 @@ export interface RewardItem {
   buttonLabel: string;
   /** When "detail", the row shows detail in the end slot instead of the button; default "button" */
   endVariant?: RewardItemEndVariant;
+  /**
+   * Per-item state:
+   * "new-user"      → shows action button
+   * "existing-user" → shows live earned amount (+£X.XX)
+   * Defaults to "new-user" if not set.
+   */
+  variant?: "new-user" | "existing-user";
+  /**
+   * Fraction of the total ticker value attributed to this item (0–1).
+   * Used when variant is "existing-user". Fractions across all items should sum to 1.
+   */
+  earnedFraction?: number;
 }
 
 export const REWARDS_SCALE = 1_000_000_000;
@@ -73,8 +85,9 @@ export interface RewardsData {
 }
 
 export const defaultRewardsData: RewardsData = {
-  startUnits: 99_999_999_999,
-  stepUnits: 10,
+  // 30 * REWARDS_SCALE = £30.00 total (£15.00 per item)
+  startUnits: 30_000_000_000,
+  stepUnits: 1,
   items: [
     {
       title: "USDC Rewards",
@@ -84,6 +97,8 @@ export const defaultRewardsData: RewardsData = {
       icon: "moneyCardCoin",
       iconBg: "rgb(var(--green40))",
       buttonLabel: "Earn",
+      variant: "existing-user",
+      earnedFraction: 0.5,
     },
     {
       title: "GBP Savings",
@@ -91,6 +106,8 @@ export const defaultRewardsData: RewardsData = {
       detail: "Detail",
       subdetail: "Subdetail",
       icon: "savingsBank",
+      variant: "existing-user",
+      earnedFraction: 0.5,
       iconBg: "var(--color-fgPositive)",
       buttonLabel: "Save",
     },
@@ -177,7 +194,7 @@ export const defaultDoMoreWithCashData: DoMoreWithCashData = {
     { title: "Lend",          description: "Lend onchain for higher yield",    icon: "percentage",   region: "US" },
     { title: "Borrow",        description: "Borrow against your crypto",        icon: "borrowProduct", region: "US" },
     { title: "Trade",         description: "Buy and sell crypto instantly",      icon: "trading",       region: "UK" },
-    { title: "Coinbase Debit", description: "Spend crypto fee-free",            icon: "card" },
+    { title: "Coinbase Debit", description: "Spend crypto\nfee-free",            icon: "card" },
   ],
 };
 

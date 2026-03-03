@@ -89,26 +89,42 @@ export const protoKitStyles = `
   .proto-kit .cash-open-orders-accordion button:first-of-type > div {
     min-height: 44px !important;
   }
-  .proto-kit .cash-open-orders-accordion #accordion-item-open-orders-panel,
-  .proto-kit .cash-open-orders-accordion #accordion-item-open-orders-panel > * {
-    padding-top: 0 !important;
+  .proto-kit .cash-open-orders-accordion #accordion-item-open-orders-panel {
+    padding-top: 4px !important;
     padding-bottom: 0 !important;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
+  /* Strip padding/margin from every CDS Accordion wrapper level and force
+     full-width so CashListCell pressables extend edge-to-edge.
+     CDS nests the row content three divs deep inside the panel. */
+  .proto-kit .cash-open-orders-accordion #accordion-item-open-orders-panel > *,
+  .proto-kit .cash-open-orders-accordion #accordion-item-open-orders-panel > * > *,
+  .proto-kit .cash-open-orders-accordion #accordion-item-open-orders-panel > * > * > * {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
 
-  /* Open orders ListCell: align with global list cell padding (8px top/bottom, 48px min-height); no horizontal padding */
+  /* Open orders ListCell: CashListCell owns all vertical spacing via contentContainer,
+     so the root gets 0 vertical padding here to avoid double-adding. */
   .proto-kit .cash-open-orders-accordion #accordion-item-open-orders-panel .cds-Cell,
   .proto-kit .cash-open-orders-accordion #accordion-item-open-orders-panel [class*="cds-ListCell"] {
-    padding-top: 8px !important;
-    padding-bottom: 8px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
-    min-height: 48px !important;
+    min-height: 56px !important;
   }
   .proto-kit .cash-open-orders-accordion #accordion-item-open-orders-panel .cds-ListCell > div,
   .proto-kit .cash-open-orders-accordion #accordion-item-open-orders-panel .cds-ListCell > button,
@@ -134,13 +150,27 @@ export const protoKitStyles = `
     margin-bottom: 0 !important;
   }
 
-  /* List cells: 8px top/bottom padding, no vertical margin, 48px min-height */
+  /* List cells: no vertical margin, 56px min-height by default.
+     Single-line AppListCell rows (.app-list-cell-single) override to 40px
+     via a more-specific selector so !important is beaten by specificity. */
   .proto-kit .cds-ListCell {
-    padding-top: 8px !important;
-    padding-bottom: 8px !important;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
-    min-height: 48px !important;
+    min-height: 56px !important;
+  }
+  .proto-kit .app-list-cell-single .cds-ListCell,
+  .proto-kit .app-list-cell-single .cds-ListCell > div,
+  .proto-kit .app-list-cell-single .cds-ListCell > button {
+    min-height: 40px !important;
+  }
+  /* L3 detail screens (available-to-trade, in-use) are exceptions: keep 56px rows */
+  .proto-kit .available-to-trade-breakdown .app-list-cell-single .cds-ListCell,
+  .proto-kit .available-to-trade-breakdown .app-list-cell-single .cds-ListCell > div,
+  .proto-kit .available-to-trade-breakdown .app-list-cell-single .cds-ListCell > button,
+  .proto-kit .in-use-breakdown .app-list-cell-single .cds-ListCell,
+  .proto-kit .in-use-breakdown .app-list-cell-single .cds-ListCell > div,
+  .proto-kit .in-use-breakdown .app-list-cell-single .cds-ListCell > button {
+    min-height: 56px !important;
   }
 
   /* ListCell description: allow 2 lines, no single-line truncation */
@@ -193,10 +223,9 @@ export const protoKitStyles = `
     margin-top: 0 !important;
     margin-bottom: 0 !important;
   }
-  .proto-kit .overview-breakdown-cell .cds-ListCell {
-    min-height: 40px !important;
-  }
+  .proto-kit .overview-breakdown-cell .cds-ListCell,
   .proto-kit .overview-breakdown-cell .cds-ListCell > div,
+  .proto-kit .overview-breakdown-cell .cds-ListCell > button,
   .proto-kit .overview-breakdown-cell .cds-ListCell > button > div {
     min-height: 40px !important;
   }
