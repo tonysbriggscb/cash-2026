@@ -2,6 +2,7 @@ import { VStack } from "@coinbase/cds-web/layout";
 import { Text } from "@coinbase/cds-web/typography/Text";
 import { ListCell } from "@coinbase/cds-web/cells";
 import { Icon } from "@coinbase/cds-web/icons/Icon";
+import React from "react";
 
 import { defaultOverviewData } from "./data";
 import { formatBalance, CryptoIcon, SECTION_HEADER_HEIGHT } from "./shared";
@@ -14,14 +15,6 @@ const inUseAmount =
 // Shared styles
 // ---------------------------------------------------------------------------
 
-const listCellStyles = {
-  root: {
-    borderRadius: 16,
-    marginBottom: 8,
-    paddingLeft: 24,
-    paddingRight: 24,
-  },
-} as const;
 
 // ---------------------------------------------------------------------------
 // UK components
@@ -64,6 +57,58 @@ function BlockSectionHeader({ title }: { title: string }) {
 // ---------------------------------------------------------------------------
 // US components
 // ---------------------------------------------------------------------------
+
+interface USCellProps {
+  media: React.ReactNode;
+  title: string;
+  description: React.ReactNode;
+  detail: string;
+  subdetail?: React.ReactNode;
+}
+
+function USCell({ media, title, description, detail, subdetail }: USCellProps) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        paddingLeft: 24,
+        paddingRight: 24,
+        paddingTop: 10,
+        paddingBottom: 10,
+        minHeight: 56,
+      }}
+    >
+      {/* Media */}
+      <div style={{ flexShrink: 0 }}>{media}</div>
+
+      {/* Middle — title + description */}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <Text font="headline" color="fg" style={{ display: "block" }}>
+          {title}
+        </Text>
+        <div style={{ marginTop: 1 }}>
+          {typeof description === "string" ? (
+            <Text font="label2" color="fgMuted">
+              {description}
+            </Text>
+          ) : (
+            description
+          )}
+        </div>
+      </div>
+
+      {/* End — detail + subdetail */}
+      <div style={{ flexShrink: 0, textAlign: "right" }}>
+        <Text font="headline" color="fg" style={{ display: "block" }}>
+          {detail}
+        </Text>
+        {subdetail && <div style={{ marginTop: 1 }}>{subdetail}</div>}
+      </div>
+    </div>
+  );
+}
 
 function USSectionHeader({ title }: { title: string }) {
   return (
@@ -247,74 +292,48 @@ function InUseScreenUS() {
 
       {/* Lending */}
       <USSectionHeader title="Lending" />
-      <ListCell
-        title="Steakhouse USDC"
-        description={
-          <Text font="label2" color="fgPositive">
-            7.20% APY
-          </Text>
-        }
-        detail="$1,000.00"
-        subdetailNode={
-          <Text font="label2" display="block" textAlign="end" color="fgMuted">
-            1,000 USDC
-          </Text>
-        }
+      <USCell
         media={<CryptoIcon symbol="usdc" />}
-        multiline
-        styles={listCellStyles}
+        title="Steakhouse USDC"
+        description={<Text font="label2" color="fgPositive">7.20% APY</Text>}
+        detail="$1,000.00"
+        subdetail={<Text font="label2" color="fgMuted">1,000 USDC</Text>}
       />
 
       {/* Limit Orders */}
       <USSectionHeader title="Limit orders" />
-      <ListCell
+      <USCell
+        media={<CryptoIcon symbol="shib" />}
         title="SHIB limit sell"
         description="Sell @ $0.000024"
         detail="$1,000.00"
-        subdetailNode={
-          <Text font="label2" display="block" textAlign="end" color="fgMuted">
-            $0.000024
-          </Text>
-        }
-        media={<CryptoIcon symbol="shib" />}
-        multiline
-        styles={listCellStyles}
+        subdetail={<Text font="label2" color="fgMuted">$0.000024</Text>}
       />
-      <ListCell
+      <USCell
+        media={<CryptoIcon symbol="btc" />}
         title="BTC limit buy"
         description="Buy @ $60,000.00"
         detail="$1,000.00"
-        subdetailNode={
-          <Text font="label2" display="block" textAlign="end" color="fgMuted">
-            $90,000.00
-          </Text>
-        }
-        media={<CryptoIcon symbol="btc" />}
-        multiline
-        styles={listCellStyles}
+        subdetail={<Text font="label2" color="fgMuted">$90,000.00</Text>}
       />
 
       {/* Derivatives */}
       <USSectionHeader title="Derivatives" />
-      <ListCell
+      <USCell
+        media={<CryptoIcon symbol="btc" />}
         title="Sell BTC PERP"
         description="2 contracts"
         detail="$1,000.00"
-        media={<CryptoIcon symbol="btc" />}
-        multiline
-        styles={listCellStyles}
       />
 
       {/* Predictions */}
       <USSectionHeader title="Predictions" />
-      <ListCell
+      <USCell
+        media={<PredictionsIcon />}
         title="Sell Yes · Noah Wyle"
         description="Emmy Award for Drama Actor?"
         detail="$1,000.00"
-        subdetailNode={<AvailableTag />}
-        media={<PredictionsIcon />}
-        multiline
-        styles={listCellStyles}
+        subdetail={<AvailableTag />}
       />
     </VStack>
   );
